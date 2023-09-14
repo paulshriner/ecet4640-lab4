@@ -6,7 +6,9 @@
         "${workspaceFolder}/src/**/*",
         "${workspaceFolder}/src/**",
         "${workspaceFolder}/tests/**/*",
-        "${workspaceFolder}/tests/**"
+        "${workspaceFolder}/tests/**",
+        "${workspaceFolder}/linclude/**",
+        "${workspaceFolder}/linclude/**/*"
       ],
       "defines": ["_DEBUG", "UNICODE", "_UNICODE"],
       "cStandard": "c17",
