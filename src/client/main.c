@@ -1,7 +1,9 @@
 #include <stdio.h>
+#include <rpc/types.h>
+#include "Print.h"
+#include "Student.h"
 
 int main()
 {
-    printf("\nThis is the client program.\n");
-    return -1;
+    return 0;
 }

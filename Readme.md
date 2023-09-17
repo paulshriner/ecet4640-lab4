@@ -6,8 +6,12 @@ CuTest is a lightweight C unit testing framework. It allows us to create simple 
 
 [link to CuTest repo](https://cutest.sourceforge.net/)
 
-There are two compilation pipelines. The production pipelines compiles the code in `src` to .o files, then links them. The test file compiles all files in `src` *except* `main.c`, and also compiles all the files in `tests` and links them. This allows the `test` executable to use the modules defined in `src`.
+There are three compilation pipelines. The production pipelines compiles the code in `src` to .o files, then links them. The test file compiles all files in `src` *except* `main.c`, and also compiles all the files in `tests` and links them. This allows the `test` executable to use the modules defined in `src`. The client and server compilations exclude `/src/server/main.c` and `/src/client/main.c`, respectively.
 
-cp -r /usr/include/x86_64-linux-gnu/ linclude
+# Notes on configuring for VS Code on windows
 
-cp -r /usr/include/ linclude/
+1. Run WSL (Windows Server Linux)
+2. Run `echo | gcc -xc -E -v -` to see where your include directoreis are.
+3. It will probably be `/usr/include`. Run `cp -r /usr/include linclude/` to add them to this folder, to stop the include errors VSCode gives. 
+4. The file `.vscode/c_cpp_properties.json` should already be configured to look for `/linclude` as an include path. If not, add `${workspaceFolder/linclude/**}` and `${workspaceFolder/linclude/**/*}` as values to the includePath array.
+
