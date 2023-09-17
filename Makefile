@@ -78,7 +78,7 @@ SRC_INCLUDE := $(addprefix -I, $(SRC_INCLUDE_DIRS))
 #  These vars include everything from regular compilation, with the addition of the test directories and source.
 
 # Finds all files within the test src directories, plus the regular source files, but excludes 'main.c'
-TEST_SRC_FILES := $(shell find $(TEST_SRC_DIRS) -name '*c') $(filter-out $(MAIN_C_SERVER) $(MAIN_C_CLIENT), $(SRC_FILES))
+TEST_SRC_FILES := $(shell find $(TEST_SRC_DIRS) -name '*c') $(filter-out $(MAIN_C_SERVER), $(SERVER_SRC_FILES))
 
 # Gets the list of .o files that will be created
 TEST_OBJ_FILES := $(TEST_SRC_FILES:%=$(O_DIR)/%.o) 

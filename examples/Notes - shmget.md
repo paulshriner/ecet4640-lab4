@@ -1,3 +1,10 @@
+Note to professor:
+
+[This](https://stackoverflow.com/questions/25514599/deallocating-shared-memory-segment) stackOverflow answer claims:
+
+> If you're on Linux, you should consider using the POSIX shared memory system (shm_open, shm_unlink), which mostly uses the standard POSIX file API (mmap, ftruncate, etc.) to interact with shared memory regions. It's also noted as being more modern as the old SYSV interface that you're using.
+
+
 # shmget
 
 [Link to man page](https://man7.org/linux/man-pages/man2/shmget.2.html)
