@@ -1,19 +1,23 @@
 #include "CuTest.h"
 #include "Student_test.h"
+#include "memShare_test.h"
 #include <stdio.h>
 
-void RunAllTests(void) {
+void RunAllTests(void)
+{
     CuString *output = CuStringNew();
-    CuSuite * suite = CuSuiteNew();
-    
+    CuSuite *suite = CuSuiteNew();
+
     CuSuiteAddSuite(suite, studentDataGetSuite());
+    CuSuiteAddSuite(suite, MemshareGetSuite());
 
     CuSuiteRun(suite);
     CuSuiteSummary(suite, output);
     CuSuiteDetails(suite, output);
-    printf("%s\n", output -> buffer);
+    printf("%s\n", output->buffer);
 }
 
-int main(void) {
+int main(void)
+{
     RunAllTests();
 }
