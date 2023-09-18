@@ -4,7 +4,6 @@
 #include <sys/shm.h>
 #include <sys/ipc.h>
 #include "Data.h"
-#include "Student.h"
 
 /*
     The shared memory key that clients and servers will use to identify the segment.
@@ -40,6 +39,23 @@ int CreateSharedMemory();
     @returns -1 if destroy flag failed.
 */
 int DestroySharedMemory();
+
+/** 
+    "Attaches" to the shared memory, returning a memory pointer to the shared memory.
+
+    Calls 'shmat(shared_mem_id, NULL, 0)`;
+
+    void * will be equal to -1 if it fails. 
+ 
+*/
+void * GetMemoryPointer(int shared_mem_id);
+
+int FillSharedMemory(void * shared_memory, Student* students_arr, int arr_length);
+
+/**
+    Fills the shared memory with the student's array.
+*/
+// int FillSharedMemory(int shared_memory_id, Student* students_arr, int arr_size);
 
 // Find out what to return for attatching structuring to memory
 

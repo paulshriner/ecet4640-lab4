@@ -1,5 +1,5 @@
 #include "Student_test.h"
-#include "Student.h"
+#include "Data.h"
 
 void testDataSize(CuTest *tc) {
     CuAssertIntEquals_Msg(tc, "The size of the data size should be as expected", DATA_SIZE, sizeof(Student));
