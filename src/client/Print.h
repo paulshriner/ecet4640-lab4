@@ -1,7 +1,7 @@
 #ifndef Print_h
 #define Print_h
 
-#include "Student.h"
+#include "Data.h"
 /*
     Functions for printing a student.
 */
