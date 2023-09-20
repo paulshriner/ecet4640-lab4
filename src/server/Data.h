@@ -45,4 +45,9 @@ typedef struct
     int loginDuration;
 } Student;
 
+/*
+    Null reference
+*/
+#define NULL 0
+
 #endif
