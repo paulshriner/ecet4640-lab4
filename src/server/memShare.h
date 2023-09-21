@@ -19,7 +19,7 @@
         - Self can write.
         - None can execute.
 */
-#define MEM_PERMISSIONS 644
+#define MEM_PERMISSIONS 0664
 
 /*
     The memory allocation must as large as the data size times the number of records.
@@ -36,7 +36,7 @@ int CreateSharedMemory();
 /**
     Flags the shared memory segment for deallocation. Returns the result of that operation.
 
-    @returns -1 if destroy flag failed.
+    @returns 0 if succesful. 1 if not succesful. Errno will be set.
 */
 int DestroySharedMemory();
 
@@ -50,7 +50,13 @@ int DestroySharedMemory();
 */
 void * GetMemoryPointer(int shared_mem_id);
 
-int FillSharedMemory(void * shared_memory, Student* students_arr, int arr_length);
+/*
+    Release a shm memory pointer.
+*/
+int ReleaseMemoryPointer(void *shmaddr);
+
+
+void FillSharedMemory(void * shared_memory, Student* students_arr, int arr_length);
 
 /**
     Fills the shared memory with the student's array.

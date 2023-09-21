@@ -1,6 +1,5 @@
 /*
     Class: ECET 4640-002
-    Assignment: Lab Assignment 3
     Authors: Christian Messmer, Karl Miller, Paul Shriner
 
     colors.h: Define color macros for use with printing text to the console
