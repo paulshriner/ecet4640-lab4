@@ -15,3 +15,7 @@ There are three compilation pipelines. The production pipelines compiles the cod
 3. It will probably be `/usr/include`. Run `cp -r /usr/include linclude/` to add them to this folder, to stop the include errors VSCode gives. 
 4. The file `.vscode/c_cpp_properties.json` should already be configured to look for `/linclude` as an include path. If not, add `${workspaceFolder/linclude/**}` and `${workspaceFolder/linclude/**/*}` as values to the includePath array.
 
+# Checking shared memory
+
+ipcs -m 
+

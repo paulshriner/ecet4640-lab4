@@ -13,7 +13,6 @@
 */
 #define DATA_ID_MAX_LENGTH 9
 /*
-
     The amount of memory (bytes) required to be allocated for the Name field.
     Equal to the longest name in Data_Names, "Assefa Ayalew Yoseph", plus the null terminator
 */
@@ -45,9 +44,5 @@ typedef struct
     int loginDuration;
 } Student;
 
-/*
-    Null reference
-*/
-#define NULL 0
 
 #endif

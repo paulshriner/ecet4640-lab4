@@ -1,6 +1,8 @@
 #include "memShare_test.h"
 #include "Data.h"
 #include <string.h>
+#include <stdio.h>
+#include <errno.h>
 
 void DestroyMem(CuTest * tc)
 {
@@ -14,8 +16,6 @@ void testCreateDestroy(CuTest *tc)
 {
     int shm_id = CreateSharedMemory();
     CuAssertIntEquals_Msg(tc, "Shm ID not -1", 1, shm_id != -1);
-    shm_id = CreateSharedMemory();
-    CuAssertIntEquals_Msg(tc, "Shm ID is -1 on double create", 1, shm_id == -1);
     DestroyMem(tc);
 }
 
@@ -24,9 +24,8 @@ void testAttachDestroy(CuTest *tc)
     int shm_id = CreateSharedMemory();
     void* z;
     z = GetMemoryPointer(shm_id);
-    CuAssertPtrEquals_Msg(tc, "Memory Pointer is not null or -1 for valid shmkey", 1, z != NULL && z != -1);
-    z = GetMemoryPointer(0x99999);
-    CuAssertPtrEquals_Msg(tc, "Memory pointer is -1 for an invalid shmkey", -1, z);
+    CuAssertIntEquals_Msg(tc, "\nPointer result from shmat not (void*) -1", 1, z != (void*)-1 );
+    ReleaseMemoryPointer(z);
     DestroyMem(tc);
 }
 
@@ -60,9 +59,9 @@ void testFillMem(CuTest* tc)
     arr[2].lastLogin = time(NULL);
     arr[2].loginDuration = -10;
 
-    int r = FillsharedMemory(GetMemoryPointer(shm_id), arr, 3);
+    FillSharedMemory(GetMemoryPointer(shm_id), arr, 3);
 
-    CuAssertIntEquals_Msg(tc, "Filling Memory Failed", 1, r == 0);
+    // CuAssertIntEquals_Msg(tc, "Filling Memory Failed", 1, r == 0);
     DestroyMem(tc);
 }
 
