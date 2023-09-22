@@ -53,19 +53,11 @@ void CreateOrDestroy() {
 
 int main(int argc, char **argv)
 {
-    CreateInitialLoginTxt();
-    
-    // if(argc > 1) {
-    //     if(strcmp(argv[1], "create") == 0) {
-    //         CreateCommand();
-    //     } else if(strcmp(argv[1], "destroy") == 0) {
-    //         DestroyCommand();
-    //     } else {
-    //         printf("\nYour argument was not understood. Try 'create' or 'destroy'. \n");
-    //     }
-    // } else {
-    //     printf("\nToggling memory.");
-    //     CreateOrDestroy();
-    // }
-    // return 0;
+    if(FileExists(LOGIN_TIMES_FILE)) {
+        printf("\nFound %s. Using.", LOGIN_TIMES_FILE);
+    } else {
+        printf("\nDidn't find %s. Creating.", LOGIN_TIMES_FILE);
+        CreateInitialLoginTxt(LOGIN_TIMES_FILE, Data_IDs, DATA_NUM_RECORDS);
+    }
+    printf("\n");
 }
