@@ -120,6 +120,9 @@ $(CLIENT_OUTPUT_FILENAME): $(CLIENT_OBJ_FILES)
 $(TESTOUTFILE): $(TEST_OBJ_FILES)
 	$(CC) $(TEST_OBJ_FILES) -o $@
 
+clean_txt_files:
+	rm -f "last-login.txt"
+
 PHONY: clean
 clean:
 	rm -r $(O_DIR)

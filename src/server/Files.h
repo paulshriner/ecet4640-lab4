@@ -2,6 +2,7 @@
 #define Files_H
 
 #include "Data.h"
+#include "map.h"
 
 /**
     When the program is first run, it will create two initial files.
@@ -14,25 +15,37 @@
 
 */
 
+// ---------------------------------------------------------------
+//              last-login operations
+// ---------------------------------------------------------------
 
 /*
-    File name for the last login times that will be used
+    File name for the text file that will store last login times.
 */
 #define LOGIN_TIMES_FILE "last-login.txt"
 
 /**
- * Creates the initial `last-login.txt` file.
+ * @brief Determines whether a file exists.
+ * @returns 1 if it exists. 0 if it does not.
+*/
+short FileExists(char * file_name_to_check);
+
+/**
+ * @brief Creates the initial last logins file. This should be called only the first time the program runs, if it doesn't exist.
+ * @param file_name The file name to create.
+ * @param id_list An array containing the IDs. Eg. "Data_IDs" from Data.h
+ * @param id_list_len The length of the id_list. Eg. "DATA_NUM_RECORDS" from Data.h
  * 
- * Each line contains:
- * - The ID from the students array, where the line # - 1 = the index of the students array
- * - A tab character
- * - A 0
- * - A newline
+ * @note Each line contain in the created `last-login.txt` file contains: 
+ * @note (1) The ID from the students array, where the `line # - 1` == the index of the students array 
+ * @note (2) A tab character 
+ * @note (3) A '0' 
+ * @note (4) A newline.
+ * @note The order of entries in the file is the same as the order in the Data_IDs array from Data.c.
  * 
  * @returns A 0 if the operation was succesful, otherwise nonzero.
 */
-int CreateInitialLoginTxt();
-
+int CreateInitialLoginTxt(char * file_name, char ** id_list, int id_list_len);
 
 /**
     Dumps last Login times, overwriting the values in `last-login.txt`. 
@@ -46,5 +59,15 @@ int CreateInitialLoginTxt();
  * @returns A 0 if the operation was succesful, otherwise a nonzero.
 */
 int DumpLoginTimes(Student* students);
+
+/**
+ * @brief Fills a map such that key of user_id maps to a time_t, using the data from the login-times .txt file.
+ * @param student_map The map of student structs to be populated from the login.txt file
+ * @param file_name The name of the login.txt file.
+ * @param id_list An array containing the IDs. Eg. "Data_IDs" from Data.h
+ * @param id_list_len The length of the id_list. Eg. "DATA_NUM_RECORDS" from Data.h
+ * @returns 0 if succesful, 1 if there was an error.
+*/
+int FillLoginMapFromFile( map* student_map, char * file_name, char ** id_list, int id_list_len); 
 
 #endif 

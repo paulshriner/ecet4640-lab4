@@ -4,7 +4,24 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-Student students[DATA_NUM_RECORDS];
+Student * students;
+
+void PopulateStudents(char ** studentIDs, char ** studentNames, int arsize) {
+    students = malloc(sizeof(Student) * arsize);
+    int i;
+    for(i = 0; i < arsize; i++) {
+        strcpy(students[i].userID, Data_IDs[i]);
+        strcpy(students[i].fullName, Data_Names[i]);
+        //students[i].age = randAge(18, 22);
+    }
+}
+
+void BuildStudentMap(map *stmap, Student *studentArr, int studentArrLength) {
+    int i;
+    for(i = 0; i < studentArrLength; i++) {
+        Map_Set(stmap, studentArr[i].userID, (void *)(&studentArr[i]));
+    }
+}
 
 /*
     Generates a random integer from min to max inclusively
@@ -15,14 +32,7 @@ int randAge(int min, int max) {
 
 //TODO build a generator for random floats
 
-void PopulateStudents() {
-    int i;
-    for(i = 0; i < DATA_NUM_RECORDS; i++) {
-        strcpy(students[i].userID, Data_IDs[i]);
-        strcpy(students[i].fullName, Data_Names[i]);
-        students[i].age = randAge(18, 22);
-    }
-}
+
 
 int CreateAndPopulate() {
     int shm_id = CreateSharedMemory();
@@ -30,7 +40,7 @@ int CreateAndPopulate() {
         return shm_id;
     }
 
-    PopulateStudents();
+    //PopulateStudents();
     void * mem_pt = GetMemoryPointer(shm_id);
     FillSharedMemory(mem_pt, students, DATA_NUM_RECORDS);
     int err = ReleaseMemoryPointer(mem_pt);
@@ -57,7 +67,7 @@ int UpdateLastLogin(/*Map Struct*/) {
         int i;
         for(i = 0; i < DATA_NUM_RECORDS; i++) {
             if(strncmp(result, Data_IDs[i], strlen(Data_IDs[i]) == 0)) {
-                time_t last_login = ParseStudentLoginTime(result);
+                //time_t last_login = ParseStudentLoginTime(result);
                 // update map
                 break;
             }
@@ -83,6 +93,7 @@ time_t ParseLoginTime(char* raw_string) {
     while(c == ' ') {
         c = raw_string[++i];
     } //now at year
+    return 0;
     
 }
 
