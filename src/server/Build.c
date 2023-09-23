@@ -1,8 +1,11 @@
 #include "Build.h"
 #include "memShare.h"
-#include "string.h"
+#include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <time.h>
+
+// ~~~~~~~~  Data Structures ~~~~~~~~~
 
 Student *students;
 
@@ -27,89 +30,99 @@ void BuildStudentMap(map *stmap, Student *studentArr, int studentArrLength)
     }
 }
 
-/*
-    Generates a random integer from min to max inclusively
-*/
-int randAge(int min, int max)
+// ~~~~~~~~  Processing ~~~~~~~~~
+
+short dirty = 1; // start dirty
+short dirty_cumlogin = 1;
+
+int UpdateFromWho(map *stmap)
 {
-    return rand() % (max - min + 1) + min;
-}
-
-// TODO build a generator for random floats
-
-int CreateAndPopulate()
-{
-    int shm_id = CreateSharedMemory();
-    if (shm_id < 0)
-    {
-        return shm_id;
-    }
-
-    // PopulateStudents();
-    void *mem_pt = GetMemoryPointer(shm_id);
-    FillSharedMemory(mem_pt, students, DATA_NUM_RECORDS);
-    int err = ReleaseMemoryPointer(mem_pt);
-    if (err)
-    {
-        return err;
-    }
-
-    return 0;
-}
-
-int UpdateLastLogin(/*Map Struct*/)
-{
-    char command[20] = "who";
-    char result[1024] = {0x0};
-
+    char command[4] = "who";
+    char line[100];
     FILE *fpipe;
-
-    if (0 == (fpipe = (FILE *)popen(command, "r")))
+    fpipe = popen(command, "r");
+    if (fpipe == NULL)
     {
-        perror("Failed to run %s, could not gather time");
         return -1;
     }
 
-    while (fgets(result, sizeof(result), fpipe) != NULL)
+    while (fgets(line, sizeof(line), fpipe) != NULL)
     {
-        int i;
-        for (i = 0; i < DATA_NUM_RECORDS; i++)
-        {
-            if (strncmp(result, Data_IDs[i], strlen(Data_IDs[i]) == 0))
-            {
-                // time_t last_login = ParseStudentLoginTime(result);
-                //  update map
-                break;
-            }
-        }
+        ProcessWhoLine(stmap, line, strlen(line));
     }
 
     return 0;
 }
 
-time_t ParseLoginTime(char *raw_string)
+int ProcessWhoLine(map *stmap, char *whoLine, int whoLineLength)
 {
-    int i = 0;
-    char c = raw_string[i];
-    /* shr5683  pts/0        2023-09-21 15:27 (10.2.9.12)*/
-    while (c != ' ')
-    { // skips id
-        c = raw_string[++i];
+    char userId[20];
+    char dateString[50];
+    char timeString[20];
+    int read_total = 0;
+    int read;
+    sscanf(whoLine, " %s %n", userId, &read);
+    read_total += read;
+
+    map_result mr = Map_Get(stmap, userId);
+    if (!mr.found)
+    { // if we can't find that person in the map, return early
+        return -1;
     }
-    while (c == ' ')
+    Student *student = (Student *)mr.data;
+
+    sscanf(whoLine + read_total, " %s %n", dateString, &read); // will be thrown away. eg `pts/1'
+    read_total += read;
+    sscanf(whoLine + read_total, " %s %n", dateString, &read); // read the date string
+    read_total += read;
+    sscanf(whoLine + read_total, " %s %n", timeString, &read); // read the time string
+    strcat(dateString, " ");
+    strcat(dateString, timeString); // catenate the time string back to the date string
+
+    time_t now = time(NULL);
+    struct tm dtime = *localtime(&now);
+    dtime.tm_sec = 0;
+
+    memset(&dtime, 0, sizeof(struct tm));
+
+    sscanf(dateString, "%d-%d-%d %d:%d", &(dtime.tm_year), &(dtime.tm_mon), &(dtime.tm_mday), &(dtime.tm_hour), &(dtime.tm_min));
+
+    dtime.tm_year -= 1900;
+    dtime.tm_mon -= 1;
+    dtime.tm_hour -= 1;
+
+    time_t parsed_time = mktime(&dtime);
+
+    if (student->lastLogin != parsed_time)
     {
-        c = raw_string[++i];
+        student->lastLogin = parsed_time;
+        dirty = 1;
     }
-    while (c != ' ')
-    { // skips pts
-        c = raw_string[++i];
-    }
-    while (c == ' ')
-    {
-        c = raw_string[++i];
-    } // now at year
+    student->active = 1;
     return 0;
 }
 
-// shr5683  pts/0        2023-09-21 15:27 (10.2.9.12)
-//	mes08346                            10.06
+void SetAllStudentsInactive(Student *stud_arr, int arr_len)
+{
+    int i;
+    for (i = 0; i < arr_len; i++)
+    {
+        stud_arr[i].active = 0;
+    }
+}
+
+void WriteStudentsToMemory(void *mem_ptr, Student *stud_arr, int arr_len)
+{
+    Student *memloc = (Student *)mem_ptr;
+    int i;
+    for (i = 0; i < arr_len; i++)
+    {
+        strcpy(memloc[i].userID, stud_arr[i].userID);
+        strcpy(memloc[i].fullName, stud_arr[i].fullName);
+        memloc[i].age = stud_arr[i].age;
+        memloc[i].gpa = stud_arr[i].age;
+        memloc[i].active = stud_arr[i].active;
+        memloc[i].lastLogin = stud_arr[i].lastLogin;
+        memloc[i].loginDuration = stud_arr[i].loginDuration;
+    }
+}

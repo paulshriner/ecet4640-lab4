@@ -40,31 +40,20 @@ int CreateSharedMemory();
 */
 int DestroySharedMemory();
 
-/** 
+/**
     "Attaches" to the shared memory, returning a memory pointer to the shared memory.
 
     Calls 'shmat(shared_mem_id, NULL, 0)`;
 
-    void * will be equal to -1 if it fails. 
- 
+    @param shared_mem_id The id of the shared memory
+    @returns A pointer to the shared memory, or -1 if it fails.
+
 */
-void * GetMemoryPointer(int shared_mem_id);
+void *GetMemoryPointer(int shared_mem_id);
 
 /*
     Release a shm memory pointer.
 */
 int ReleaseMemoryPointer(void *shmaddr);
-
-
-void FillSharedMemory(void * shared_memory, Student* students_arr, int arr_length);
-
-/**
-    Fills the shared memory with the student's array.
-*/
-// int FillSharedMemory(int shared_memory_id, Student* students_arr, int arr_size);
-
-// Find out what to return for attatching structuring to memory
-
-// find out what info is needed for detatching from memory
 
 #endif
