@@ -1,4 +1,5 @@
 #include "CuTest.h"
+#include "util_test.h"
 #include "Student_test.h"
 #include "memShare_test.h"
 #include "Build_test.h"
@@ -12,6 +13,7 @@ void RunAllTests(void)
     CuString *output = CuStringNew();
     CuSuite *suite = CuSuiteNew();
 
+    CuSuiteAddSuite(suite, utilTestGetSuite());
     CuSuiteAddSuite(suite, studentDataGetSuite());
     CuSuiteAddSuite(suite, MemshareGetSuite());
     CuSuiteAddSuite(suite, BuildGetSuite());
