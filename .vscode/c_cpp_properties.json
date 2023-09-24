@@ -3,6 +3,7 @@
         {
             "name": "Linux",
             "includePath": [
+                "C:\\msys64\\mingw64\\include",
                 "${workspaceFolder}/src/**/*",
                 "${workspaceFolder}/src/**",
                 "${workspaceFolder}/tests/**/*",
@@ -18,7 +19,7 @@
             "cStandard": "c99",
             "cppStandard": "gnu++14",
             "intelliSenseMode": "linux-gcc-x64",
-            "compilerPath": "C:\\Code\\c++\\winlibs-i686-posix-dwarf-gcc-12.2.0-llvm-15.0.7-mingw-w64ucrt-10.0.0-r4\\mingw32\\bin\\gcc.exe"
+            "compilerPath": "C:\\msys64\\mingw64\\bin\\gcc.exe"
         }
     ],
     "version": 4

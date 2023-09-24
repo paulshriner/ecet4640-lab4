@@ -53,16 +53,16 @@ int FillStudentMapFromFile(map *student_map, char *file_name, char **id_list, in
         return -1;
     }
     // id buffer
-    char line_buffer[9];
+    char user_id[9];
     int age;
     float gpa;
     long time;
-    while (fscanf(file, "%9s\t%d\t%f\t%ld", line_buffer, &age, &gpa, &time) == 4)
+    while (fscanf(file, "%9s\t%d\t%f\t%ld", user_id, &age, &gpa, &time) == 4)
     {
-        map_result result = Map_Get(student_map, line_buffer);
+        map_result result = Map_Get(student_map, user_id);
         if (result.found == 0)
         {
-            return -2;
+            continue;
         }
         ((Student *)result.data)->age = age;
         ((Student *)result.data)->gpa = gpa;

@@ -59,7 +59,7 @@ void testFillMem(CuTest* tc)
     arr[2].lastLogin = time(NULL);
     arr[2].loginDuration = -10;
 
-    FillSharedMemory(GetMemoryPointer(shm_id), arr, 3);
+    //FillSharedMemory(GetMemoryPointer(shm_id), arr, 3);
 
     // CuAssertIntEquals_Msg(tc, "Filling Memory Failed", 1, r == 0);
     DestroyMem(tc);

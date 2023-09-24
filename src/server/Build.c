@@ -33,7 +33,6 @@ void BuildStudentMap(map *stmap, Student *studentArr, int studentArrLength)
 // ~~~~~~~~  Processing ~~~~~~~~~
 
 short dirty = 1; // start dirty
-short dirty_cumlogin = 1;
 
 int UpdateFromWho(map *stmap)
 {
@@ -120,7 +119,7 @@ void WriteStudentsToMemory(void *mem_ptr, Student *stud_arr, int arr_len)
         strcpy(memloc[i].userID, stud_arr[i].userID);
         strcpy(memloc[i].fullName, stud_arr[i].fullName);
         memloc[i].age = stud_arr[i].age;
-        memloc[i].gpa = stud_arr[i].age;
+        memloc[i].gpa = stud_arr[i].gpa;
         memloc[i].active = stud_arr[i].active;
         memloc[i].lastLogin = stud_arr[i].lastLogin;
         memloc[i].loginDuration = stud_arr[i].loginDuration;

@@ -1,5 +1,7 @@
 {
     "files.associations": {
-        "getdata.h": "c"
+        "getdata.h": "c",
+        "stdlib.h": "c",
+        "stdio.h": "c"
     }
 }

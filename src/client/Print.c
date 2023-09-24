@@ -23,8 +23,8 @@ void PrintStudentRow(Student *student)
     printActive(student->active);
     printf("%*s", DATA_ID_MAX_LENGTH, student->userID);
     printf("%5d", student->age);
-    printf("%*s", DATA_NAME_MAX_LENGTH, student->fullName);
-    printf("%5.2f", student->gpa);
+    printf("%*s  ", DATA_NAME_MAX_LENGTH, student->fullName);
+    printf("%.2f", student->gpa);
     printf("%20s", "12/12/12 00:00:00");
     printf("%10s", "00:00:00");
     printf("\n");

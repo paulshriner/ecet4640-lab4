@@ -1,2 +1,5 @@
-bin
-linclude
+bin/
+linclude/
+/client
+/server
+/static-user-data.txt
