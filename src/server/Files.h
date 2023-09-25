@@ -31,6 +31,13 @@
 #define STATIC_USER_DATA_FILE "static-user-data.txt"
 
 /**
+   File name for the text file that will store the cumulative login time for each user at the point in time when it was created.
+
+   The values in this file are subtracted from the result of running 'ac -p' later to get the cumulative time each user was logged in since the server started.
+*/
+#define STATIC_USER_CUMULATIVE_FILE "static-user-cumulative-start.txt"
+
+/**
  * @brief Determines whether a file exists.
  * @returns 1 if it exists. 0 if it does not.
  */
@@ -69,5 +76,16 @@ int WriteStudentArrayToFile(Student *students, int arr_len, char *file_name);
     @returns 0 if succesful, 1 if there was an error.
  */
 int FillStudentMapFromFile(map *student_map, char *file_name, char **id_list, int id_list_len);
+
+/**
+   Creates the initial cumulative login time file. 
+
+   It will hold the result of running 'ac -p'.
+
+   @param file_name The name of the file to created. EG STATIC_USER_CUMULATIVE_FILE
+   @warning This file should already be validated to not exist.
+   @returns 0 if succesful, -1 if the file couldn't be opened, -2 if the pipe couldn't be opened, otherwise an error code.
+*/
+int CreateInitialCumulativeFile(char *file_name);
 
 #endif

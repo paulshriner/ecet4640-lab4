@@ -19,3 +19,7 @@ There are three compilation pipelines. The production pipelines compiles the cod
 
 ipcs -m 
 
+# Check if process running
+
+ps -e | grep "server"
+

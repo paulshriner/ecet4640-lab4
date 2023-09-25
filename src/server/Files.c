@@ -87,3 +87,23 @@ int WriteStudentArrayToFile(Student *students, int arr_len, char *file_name)
     fclose(file);
     return 0;
 }
+
+int CreateInitialCumulativeFile(char * file_name) {
+    FILE *file = fopen(file_name, "w");
+    if(file == NULL) {
+        return -1;
+    }
+    FILE *pipe = popen("ac -p", "r");
+    if(pipe == NULL) {
+        fclose(file);
+        return -2;
+    }
+
+    char line[100];
+    while(fgets(line, sizeof(line), pipe) != NULL) {
+        fputs(line, file);
+    }
+    pclose(pipe);
+    fclose(file);
+    return 0;
+}

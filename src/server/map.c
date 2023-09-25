@@ -36,14 +36,16 @@ int hash_string(int hash_table_size, char *string, int strlen)
     {
         hash *= -1;
     }
-    return hash % hash_table_size;
+    return hash % (hash_table_size-1)+1;
 }
 
 map *NewMap(int capacity)
 {
     int log2 = hash_log2(capacity);
     int capac = hash_upperLimit(log2);
-    struct _map_bucket *buckets = malloc(sizeof(struct _map_bucket) * capac);
+    int sz = sizeof(struct _map_bucket) * capac;
+    struct _map_bucket *buckets = malloc(sz);
+    memset(buckets, 0, sz);
     int i;
     for (i = 0; i < capac; i++)
     {
@@ -93,10 +95,12 @@ void _bucket_get(struct _map_bucket *bucket, char *key, map_result *result)
             result->found = 1;
             result->data = check->data;
             return;
-        }
-        if (check->next != NULL)
+        } else if (check->next != NULL)
         {
             check = check->next;
+        } else {
+            result->found = 0;
+            break;
         }
     }
 }
