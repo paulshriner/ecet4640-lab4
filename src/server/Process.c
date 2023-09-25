@@ -12,6 +12,7 @@
 #include <string.h>
 
 map *student_map;
+map *initial_cumulative_times;
 
 // ~~~~~~~~~~~~~~~ Lockfile Commands ~~~~~~~~~~~~~~~~~~~~~
 
@@ -108,6 +109,15 @@ int Initialize()
             printf("Problem creating %s!\n", STATIC_USER_DATA_FILE);
         }
     }
+    if(!FileExists(STATIC_USER_CUMULATIVE_FILE))
+    {
+        printf("%s does not exist. Creating.\n", STATIC_USER_CUMULATIVE_FILE);
+        err = CreateInitialCumulativeFile(STATIC_USER_CUMULATIVE_FILE);
+        if(err)
+        {
+            printf("Problem creating %s!\n", STATIC_USER_CUMULATIVE_FILE);
+        }
+    }
     PopulateStudents(Data_IDs, Data_Names, DATA_NUM_RECORDS);
     student_map = NewMap(50);
     BuildStudentMap(student_map, students, DATA_NUM_RECORDS);
@@ -117,6 +127,12 @@ int Initialize()
         printf("Problem filling student map from %s!\n", STATIC_USER_DATA_FILE);
     }
     printf("Student data retrieved from file.\n");
+
+    initial_cumulative_times = NewMap(50);
+    err = ReadInitialCumulative(initial_cumulative_times, STATIC_USER_CUMULATIVE_FILE);
+    if(err) {
+        printf("Failed to read %s. Cumulative times may be wrong!", STATIC_USER_CUMULATIVE_FILE);
+    }
 
     dirty = 0;
 
@@ -138,7 +154,13 @@ void Process(int shm_id)
         IndicateRereadDone();
     }
     SetAllStudentsInactive(students, DATA_NUM_RECORDS);
-    int err = UpdateFromWho(student_map);
+    int err = ReadACP(student_map);
+    if (err) {
+        printf("Error piping ac -p command! \n");
+    } else {
+        CalculateCumulative(students, DATA_NUM_RECORDS, initial_cumulative_times);
+    }
+    err = UpdateFromWho(student_map);
     if (err)
     {
         perror("Error updating from who!");
@@ -172,7 +194,6 @@ void HelpCommand()
     printf("\nUsage: server [OPTION]\n\n");
     printf("Options: \n");
     printf("\thelp\t\t\tShows the possible program commands\n");
-    printf("\tclear\t\t\tClears the shared virtual memory segment\n");
     printf("\treset\t\t\tRegenerates the user data file\n");
     printf("\tstop\t\t\tStops an existing server process if it is running\n");
     printf("\trun\t\t\tCreates a new server with output to the shell if a server isn't already running.\n");
@@ -230,11 +251,6 @@ void StopCommand()
     }
 }
 
-void ClearCommand()
-{
-    DestroySharedMemory();
-    printf("\nVirtual memory segment is now deallocated\n\n");
-}
 
 void ResetCommand()
 {
@@ -250,13 +266,23 @@ void ResetCommand()
     err = CreateInitialUserDataFile(STATIC_USER_DATA_FILE, Data_IDs, DATA_NUM_RECORDS);
     if (err)
     {
-        printf("\nProblem creating %s!", STATIC_USER_DATA_FILE);
+        printf("Problem creating %s!\n", STATIC_USER_DATA_FILE);
     } else {
-        printf("Data file created.\n");
-        if(DoesLockfileExist()) {
-            printf("Indicated re-read to running server process.\n");
-            IndicateRereadNeeded();
-        }
+        printf("%s created.\n", STATIC_USER_DATA_FILE);
+    }
+
+    printf("Creating new cumulative file.\n");
+    err = CreateInitialCumulativeFile(STATIC_USER_CUMULATIVE_FILE);
+    if (err)
+    {
+        printf("Problem creating %s!\n", STATIC_USER_CUMULATIVE_FILE);
+    } else {
+        printf("%s created.\n", STATIC_USER_CUMULATIVE_FILE);
+    }
+    
+    if(DoesLockfileExist()) {
+        printf("Indicated re-read to running server process.\n");
+        IndicateRereadNeeded();
     }
 }
 

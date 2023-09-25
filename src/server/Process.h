@@ -161,7 +161,7 @@ void RunCommand();
 void HelpCommand();
 
 /**
-    Uses nohup ./server run to run the prodess headlessly.
+    Uses nohup ./{processName} run to run the prodess headlessly.
     @param processName The name of the currently running process.
 */
 void RunHeadless(char * processName);

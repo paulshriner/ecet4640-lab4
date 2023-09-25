@@ -126,3 +126,77 @@ void WriteStudentsToMemory(void *mem_ptr, Student *stud_arr, int arr_len)
         memloc[i].loginDuration = stud_arr[i].loginDuration;
     }
 }
+
+// ~~~~~~~~  Cumulative Processing ~~~~~~~~~
+
+int ReadInitialCumulative(map *time_map, char *filename) {
+    FILE * file = fopen(filename, "r");
+    char line[100];
+    if(file == NULL) {
+        return -1;
+    }
+    while(fgets(line, sizeof(line), file) != NULL) {
+        ReadCumulativeFileLine(time_map, line);
+    }
+
+    fclose(file);
+    return 0;
+}
+
+int ReadACP(map *st_map) {
+    char command[6] = "ac -p";
+    char line[300]; 
+    FILE *fpipe;
+    fpipe = popen(command, "r");
+    if(fpipe == NULL)
+    {
+        return -1;
+    }
+    int err;
+    while(fgets(line, sizeof(line), fpipe) != NULL)
+    {
+        err = ReadAcpPipeLine(st_map, line);
+        if(err) {
+            printf("\nError %d reading acp pipeline.", err);
+            break;
+        }
+    }
+    pclose(fpipe);
+    return 0;
+}
+
+void ReadCumulativeFileLine(map *cum_map, char *acp_line) {
+    char userId[20];
+    float minutes;
+    sscanf(acp_line, " %s %f ", userId, &minutes);
+    // int seconds = (int) (minutes * 60)
+    long seconds = (long) (minutes * 60);
+    Map_Set(cum_map, userId, (void*) seconds);
+}
+
+int ReadAcpPipeLine(map *stmap, char * acp_line) {
+    if(acp_line == NULL || strlen(acp_line) < 1) {
+        return -1;
+    }
+    char userId[40];
+    float minutes;
+    sscanf(acp_line, "%s %f", userId, &minutes);
+    map_result result = Map_Get(stmap, userId);
+    if(result.found) {
+        Student * student = (Student *) result.data;
+        int seconds = (int) (minutes * 60);
+        student->loginDuration = seconds;
+    }
+    return 0;
+}
+
+void CalculateCumulative(Student * stud_arr, int stud_arr_len, map * cum_map) {
+    int i;
+    for(i = 0; i < stud_arr_len; i++) {
+        map_result result = Map_Get(cum_map, stud_arr[i].userID);
+        if(result.found) {
+            long time_at_server_start = (long) result.data;
+            stud_arr[i].loginDuration = stud_arr[i].loginDuration - time_at_server_start;
+        }
+    }
+}
