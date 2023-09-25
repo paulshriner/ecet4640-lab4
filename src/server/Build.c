@@ -49,6 +49,7 @@ int UpdateFromWho(map *stmap)
     {
         ProcessWhoLine(stmap, line, strlen(line));
     }
+    pclose(fpipe);
 
     return 0;
 }

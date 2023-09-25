@@ -8,6 +8,8 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <signal.h>
+#include <stdlib.h>
+#include <string.h>
 
 map *student_map;
 
@@ -84,7 +86,7 @@ short IsRereadNeeded() {
 }
 
 void SignalHandle(int signo) {
-    printf("\nReceived shutdown signal.");
+    printf("Received shutdown signal.\n");
     if(signo == SIGINT || signo == SIGTERM) {
         is_stopping = 1;
     }
@@ -99,11 +101,11 @@ int Initialize()
     int err;
     if (!FileExists(STATIC_USER_DATA_FILE))
     {
-        printf("\n%s does not exist. Creating.", STATIC_USER_DATA_FILE);
+        printf("%s does not exist. Creating.\n", STATIC_USER_DATA_FILE);
         err = CreateInitialUserDataFile(STATIC_USER_DATA_FILE, Data_IDs, DATA_NUM_RECORDS);
         if (err)
         {
-            printf("\nProblem creating %s!", STATIC_USER_DATA_FILE);
+            printf("Problem creating %s!\n", STATIC_USER_DATA_FILE);
         }
     }
     PopulateStudents(Data_IDs, Data_Names, DATA_NUM_RECORDS);
@@ -112,9 +114,9 @@ int Initialize()
     err = FillStudentMapFromFile(student_map, STATIC_USER_DATA_FILE, Data_IDs, DATA_NUM_RECORDS);
     if (err)
     {
-        printf("\nProblem filling student map from %s!", STATIC_USER_DATA_FILE);
+        printf("Problem filling student map from %s!\n", STATIC_USER_DATA_FILE);
     }
-    printf("\nStudent data retrieved from file.");
+    printf("Student data retrieved from file.\n");
 
     dirty = 0;
 
@@ -124,7 +126,7 @@ int Initialize()
         DestroySharedMemory();
         shmid = CreateSharedMemory();
     }
-    printf("\nShared memory allocated.");
+    printf("Shared memory allocated.\n");
     return shmid;
 }
 
@@ -173,11 +175,13 @@ void HelpCommand()
     printf("\tclear\t\t\tClears the shared virtual memory segment\n");
     printf("\treset\t\t\tRegenerates the user data file\n");
     printf("\tstop\t\t\tStops an existing server process if it is running\n");
-    printf("\trun\t\t\tStops any existing server, then creates a new one\n\n");
+    printf("\trun\t\t\tCreates a new server with output to the shell if a server isn't already running.\n");
+    printf("\theadless\t\tCreates a new headless server if a server isn't already running.\n\n");
 }
 
 void RunCommand()
 {
+    printf("\nRunning server.\n");
     if(DoesLockfileExist()) {
         printf("\nServer is already running. Run 'server stop' to shut it down first.\n");
         return;
@@ -190,7 +194,7 @@ void RunCommand()
     int shm_id = Initialize();
     signal(SIGTERM, SignalHandle);
     signal(SIGINT, SignalHandle);
-    printf("\nServer started.\n");
+    printf("Server started.\n");
     fflush(stdout);
     while (!is_stopping)
     {
@@ -211,19 +215,19 @@ void RunCommand()
 
 void StopCommand()
 {
-    printf("\nStopping server.\n");
+    printf("\nStopping server...\n");
     int err = TerminateExistingServer();
     if(err) {
         if(err == -1) {
-            printf("Failed to find lockfile!\n");
+            printf("Server isn't running.\n");
         } else if(err == -2) {
             printf("Lockfile did not contain a valid process id!\n");
         } else {
             printf("Sending terminate signal failed!\n");
         }
-        printf("Server stop may have failed. \n");
+    } else {
+        printf("Server terminated.\n");
     }
-    printf("Server terminated.\n");
 }
 
 void ClearCommand()
@@ -254,4 +258,24 @@ void ResetCommand()
             IndicateRereadNeeded();
         }
     }
+}
+
+void RunHeadless(char * processName)
+{
+    if(DoesLockfileExist()) {
+        printf("Server process already running.\n");
+        return;
+    }
+    char commandFront[] = " nohup ";
+    char commandEnd[] = " run & exit";
+    size_t comm_length = strlen(commandFront) + strlen(commandEnd) + strlen(processName) + 1;
+    char * commandFull = malloc(comm_length * sizeof(char));
+    memset(commandFull, 0, comm_length * sizeof(char));
+    strcpy(commandFull, commandFront);
+    strcat(commandFull, processName);
+    strcat(commandFull, commandEnd);
+
+    printf("Executing: %s\n",commandFull);
+    popen(commandFull, "we");
+    printf("Server running headlessly.\n");
 }

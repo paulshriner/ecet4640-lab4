@@ -30,6 +30,10 @@ int main(int argc, char **argv)
     {
         StopCommand();
     }
+    else if(strcmp(argv[1], "headless") == 0 )
+    {
+        RunHeadless(argv[0]);
+    }
     else if (strcmp(argv[1], "run") == 0) 
     {
         RunCommand();

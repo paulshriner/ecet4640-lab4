@@ -122,7 +122,8 @@ $(TESTOUTFILE): $(TEST_OBJ_FILES)
 
 # clean, and clean files
 cleanf: clean
-	rm -f "static-user-data.txt"
+	-rm -f "static-user-data.txt"
+	-rm -f "nohup.out"
 
 PHONY: clean
 clean:
