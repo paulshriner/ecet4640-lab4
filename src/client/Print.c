@@ -1,6 +1,8 @@
 #include "Print.h"
 #include "colors.h"
 #include <stdio.h>
+#include <sys/types.h>
+#include <time.h>
 
 void printActive(short active)
 {
@@ -20,13 +22,26 @@ void PrintStudentRow(Student *student)
     {
         return;
     }
+
+    struct tm *tm;
+    tm = localtime(&(student->lastLogin));
+    short int mm = (short int)tm -> tm_mon;
+    short int dd = (short int)tm -> tm_mday;
+    short int yy = (short int)tm -> tm_year;
+    short int hr = (short int)tm -> tm_hour;
+    short int mn = (short int)tm -> tm_min;
+
     printActive(student->active);
     printf("%*s", DATA_ID_MAX_LENGTH, student->userID);
     printf("%5d", student->age);
     printf("%*s  ", DATA_NAME_MAX_LENGTH, student->fullName);
     printf("%.2f", student->gpa);
-    printf("%20s", "12/12/12 00:00:00");
-    printf("%10s", "00:00:00");
+    if (student->lastLogin == 0) {
+        printf("%18s ", "UNKNOWN");
+    } else {
+        printf("%5d/%d/%d %02d:%02d", mm, dd, 1900 + yy, hr, mn);
+    }
+    printf("%10d", student->loginDuration);
     printf("\n");
 }
 

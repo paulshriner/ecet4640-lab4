@@ -33,7 +33,7 @@ int main(int argc, char **argv)
 
     if (argc <= 1 || argc >= 3)
     {
-        printf("You entered too few or many options!\n");
+        printf("Too few or many options!\n");
         HelpCommand();
     }
     else if (strcmp(argv[1], "help") == 0)
@@ -58,7 +58,7 @@ int main(int argc, char **argv)
     }
     else if (strcmp(argv[1], "delete-lockfile") == 0)
     { // an admin debug command; not meant to be called
-        printf("Deleting lockfile.\n");
+        printf("Deleting lockfile.\n\n");
         DeleteLockfile();
     }
     else
