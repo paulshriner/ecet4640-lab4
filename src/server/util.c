@@ -1,3 +1,6 @@
+/**
+ * @brief Definitions for helper functions.
+ */
 #include "util.h"
 
 #include <stdlib.h>

@@ -1,6 +1,8 @@
 #ifndef util_h
 #define util_h
 /**
+ * @brief Declarations for helper functions.
+ *
  * Contains utility functions that are not coupled to any other data or structures in the program.
  */
 

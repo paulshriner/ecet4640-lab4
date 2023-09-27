@@ -1,6 +1,8 @@
 #ifndef Files_H
 #define Files_H
-
+/**
+ * @brief Definitions for functions that operate on files.
+ */
 #include "Data.h"
 #include "map.h"
 
@@ -9,8 +11,6 @@
     Some program data needs to be stored in files, to preserve it in the case of early termination.
 
     There are two files that are created if they don't exist when the program is first run. One has userIDs linked to their age, gpa, and last login time. The other has userIDs linked to the cumulative login time as determined by `ac -p` in order to determine the time logged in since program first ran.
-
-    @todo initial-cumulative.txt
 */
 
 /**
@@ -78,7 +78,7 @@ int WriteStudentArrayToFile(Student *students, int arr_len, char *file_name);
 int FillStudentMapFromFile(map *student_map, char *file_name, char **id_list, int id_list_len);
 
 /**
-   Creates the initial cumulative login time file. 
+   Creates the initial cumulative login time file.
 
    It will hold the result of running 'ac -p'.
 

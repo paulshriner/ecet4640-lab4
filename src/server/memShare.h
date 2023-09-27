@@ -1,5 +1,8 @@
 #ifndef MEM_SHARE_H
 #define MEM_SHARE_H
+/**
+ * @brief Declarations for functions that operate on a shared memory segment.
+ */
 
 #include <sys/shm.h>
 #include <sys/ipc.h>

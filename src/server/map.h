@@ -2,6 +2,7 @@
 #define map_h
 
 /**
+ * @brief Definitions for functions that operate on a hash map data structure.
  * Karl's take on a simple hashmap map structure, which maps strings to void pointers. You can use casting to convert the void pointers into most of whatever else is needed.
  *
  * Example usage, casting an into the data part of the map.
@@ -104,7 +105,7 @@ typedef struct
 } map;
 
 /**
-    The result of a map retrieval.
+    @brief The result of a map retrieval.
 */
 typedef struct
 {

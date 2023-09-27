@@ -1,5 +1,8 @@
-#include "Process.h"
+/**
+ * @brief Definitions for functions that manage control flow.
+ */
 
+#include "Process.h"
 #include "Files.h"
 #include "Data.h"
 #include "Build.h"
@@ -23,8 +26,9 @@ short DoesLockfileExist()
 
 int CreateLockfile()
 {
-    FILE * file = fopen(LOCKFILE, "w");
-    if(file == NULL) {
+    FILE *file = fopen(LOCKFILE, "w");
+    if (file == NULL)
+    {
         return -1;
     }
     fprintf(file, "0 %d", getpid());
@@ -32,63 +36,76 @@ int CreateLockfile()
     return 0;
 }
 
-int DeleteLockfile() {
+int DeleteLockfile()
+{
     return remove(LOCKFILE);
 }
 
-int TerminateExistingServer() {
-    FILE * file = fopen(LOCKFILE, "r");
-    if(file == NULL) {
+int TerminateExistingServer()
+{
+    FILE *file = fopen(LOCKFILE, "r");
+    if (file == NULL)
+    {
         return -1;
     }
     int need_rewrite;
     int pid = 0;
     fscanf(file, "%d %d", &need_rewrite, &pid);
     fclose(file);
-    if(pid > 0) {
+    if (pid > 0)
+    {
         return kill(pid, SIGTERM);
     }
     return -2;
 }
 
-int IndicateRereadNeeded() {
-    FILE * file = fopen(LOCKFILE, "r+");
-    if (file == NULL) {
+int IndicateRereadNeeded()
+{
+    FILE *file = fopen(LOCKFILE, "r+");
+    if (file == NULL)
+    {
         return -1;
     }
     int err = 0;
     err = fseek(file, 0, SEEK_SET);
-    if(!err) {
+    if (!err)
+    {
         fputc('1', file);
     }
     err = fclose(file);
     return err;
 }
 
-int IndicateRereadDone() {
-    FILE * file = fopen(LOCKFILE, "r+");
-    if (file == NULL) {
+int IndicateRereadDone()
+{
+    FILE *file = fopen(LOCKFILE, "r+");
+    if (file == NULL)
+    {
         return -1;
     }
     int err = 0;
     err = fseek(file, 0, SEEK_SET);
-    if(!err) {
+    if (!err)
+    {
         fputc('0', file);
     }
     err = fclose(file);
     return err;
 }
 
-short IsRereadNeeded() {
-    FILE * file = fopen(LOCKFILE, "r");
+short IsRereadNeeded()
+{
+    FILE *file = fopen(LOCKFILE, "r");
     char firstc = fgetc(file);
     fclose(file);
     return firstc == '1';
 }
 
-void SignalHandle(int signo) {
+void SignalHandle(int signo)
+{
     printf("Received shutdown signal.\n");
-    if(signo == SIGINT || signo == SIGTERM) {
+    if (signo == SIGINT || signo == SIGTERM)
+    {
         is_stopping = 1;
     }
 }
@@ -109,11 +126,11 @@ int Initialize()
             printf("Problem creating %s!\n", STATIC_USER_DATA_FILE);
         }
     }
-    if(!FileExists(STATIC_USER_CUMULATIVE_FILE))
+    if (!FileExists(STATIC_USER_CUMULATIVE_FILE))
     {
         printf("%s does not exist. Creating.\n", STATIC_USER_CUMULATIVE_FILE);
         err = CreateInitialCumulativeFile(STATIC_USER_CUMULATIVE_FILE);
-        if(err)
+        if (err)
         {
             printf("Problem creating %s!\n", STATIC_USER_CUMULATIVE_FILE);
         }
@@ -130,7 +147,8 @@ int Initialize()
 
     initial_cumulative_times = NewMap(50);
     err = ReadInitialCumulative(initial_cumulative_times, STATIC_USER_CUMULATIVE_FILE);
-    if(err) {
+    if (err)
+    {
         printf("Failed to read %s. Cumulative times may be wrong!", STATIC_USER_CUMULATIVE_FILE);
     }
 
@@ -148,16 +166,20 @@ int Initialize()
 
 void Process(int shm_id)
 {
-    if(IsRereadNeeded()) {
+    if (IsRereadNeeded())
+    {
         printf("\nReread indicated - rechecking user data file.");
         FillStudentMapFromFile(student_map, STATIC_USER_DATA_FILE, Data_IDs, DATA_NUM_RECORDS);
         IndicateRereadDone();
     }
     SetAllStudentsInactive(students, DATA_NUM_RECORDS);
     int err = ReadACP(student_map);
-    if (err) {
+    if (err)
+    {
         printf("Error piping ac -p command! \n");
-    } else {
+    }
+    else
+    {
         CalculateCumulative(students, DATA_NUM_RECORDS, initial_cumulative_times);
     }
     err = UpdateFromWho(student_map);
@@ -203,12 +225,14 @@ void HelpCommand()
 void RunCommand()
 {
     printf("\nRunning server.\n");
-    if(DoesLockfileExist()) {
+    if (DoesLockfileExist())
+    {
         printf("\nServer is already running. Run 'server stop' to shut it down first.\n");
         return;
     }
     int err = CreateLockfile();
-    if(err) {
+    if (err)
+    {
         printf("\nFailed to create lockfile! Exiting.\n");
         return;
     }
@@ -224,11 +248,13 @@ void RunCommand()
     }
     printf("Server shutting down.\n");
     err = DeleteLockfile();
-    if(err) {
+    if (err)
+    {
         printf("Failed to delete lockfile!\n");
     }
     err = DestroySharedMemory();
-    if(err) {
+    if (err)
+    {
         printf("Failed to destroy shared memory!\n");
     }
     printf("Server terminated.\n");
@@ -238,19 +264,26 @@ void StopCommand()
 {
     printf("\nStopping server...\n");
     int err = TerminateExistingServer();
-    if(err) {
-        if(err == -1) {
+    if (err)
+    {
+        if (err == -1)
+        {
             printf("Server isn't running.\n");
-        } else if(err == -2) {
+        }
+        else if (err == -2)
+        {
             printf("Lockfile did not contain a valid process id!\n");
-        } else {
+        }
+        else
+        {
             printf("Sending terminate signal failed!\n");
         }
-    } else {
+    }
+    else
+    {
         printf("Server terminated.\n");
     }
 }
-
 
 void ResetCommand()
 {
@@ -267,7 +300,9 @@ void ResetCommand()
     if (err)
     {
         printf("Problem creating %s!\n", STATIC_USER_DATA_FILE);
-    } else {
+    }
+    else
+    {
         printf("%s created.\n", STATIC_USER_DATA_FILE);
     }
 
@@ -276,32 +311,36 @@ void ResetCommand()
     if (err)
     {
         printf("Problem creating %s!\n", STATIC_USER_CUMULATIVE_FILE);
-    } else {
+    }
+    else
+    {
         printf("%s created.\n", STATIC_USER_CUMULATIVE_FILE);
     }
-    
-    if(DoesLockfileExist()) {
+
+    if (DoesLockfileExist())
+    {
         printf("Indicated re-read to running server process.\n");
         IndicateRereadNeeded();
     }
 }
 
-void RunHeadless(char * processName)
+void RunHeadless(char *processName)
 {
-    if(DoesLockfileExist()) {
+    if (DoesLockfileExist())
+    {
         printf("Server process already running.\n");
         return;
     }
     char commandFront[] = " nohup ";
     char commandEnd[] = " run & exit";
     size_t comm_length = strlen(commandFront) + strlen(commandEnd) + strlen(processName) + 1;
-    char * commandFull = malloc(comm_length * sizeof(char));
+    char *commandFull = malloc(comm_length * sizeof(char));
     memset(commandFull, 0, comm_length * sizeof(char));
     strcpy(commandFull, commandFront);
     strcat(commandFull, processName);
     strcat(commandFull, commandEnd);
 
-    printf("Executing: %s\n",commandFull);
+    printf("Executing: %s\n", commandFull);
     popen(commandFull, "we");
     printf("Server running headlessly.\n");
 }
