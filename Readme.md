@@ -23,3 +23,15 @@ ipcs -m
 
 ps -e | grep "server"
 
+# Documenting
+
+You need teeceetree, cscope and dot (from graphviz) to be on your path to run `document.bat`. That .bat is of course configured for windows but could be made to work with Linux.
+
+It generates list of functions with cscope, then generates a graphviz notation file with tceetree, then generates an image with graphiz (dot). 
+
+It will generate 3 files in `./docs`: `full-no-library.png`, `full-with-library.png`, and `process.png`.
+
+You can find the instructions I used [here](https://sourceforge.net/p/tceetree/wiki/Home/).
+
+
+

@@ -1,5 +1,8 @@
 #ifndef BUILD_H
 #define BUILD_H
+/**
+ * @brief Declarations for functions that populate data structures.
+ */
 
 #include "Data.h"
 #include "map.h"
@@ -87,7 +90,7 @@ void WriteStudentsToMemory(void *mem_ptr, Student *stud_arr, int arr_len);
 
     @returns 0 if success. -1 if it failed to find the file.
 */
-int ReadInitialCumulative(map * time_map, char *filename);
+int ReadInitialCumulative(map *time_map, char *filename);
 
 /**
     Pipes ac -p, then calls ReadCumulativeLine to update the student map.
@@ -103,12 +106,12 @@ int ReadACP(map *st_map);
     Reads a single line from the initial cumulative file and updates the map so that userID maps to a float value in the initial file.
 
     @note A line is structured like this: `	mes08346                            10.06`
-    It finishes with a line starting with `total `; this line should be disregarded. 
+    It finishes with a line starting with `total `; this line should be disregarded.
     @param cum_map The cumulative map.
     @param acp_line A single line from ac -p.
     @returns -1 ...
 */
-void ReadCumulativeFileLine(map * cum_map, char * acp_line);
+void ReadCumulativeFileLine(map *cum_map, char *acp_line);
 
 /**
     Reads a single line from the result of ac -p into the students map.
@@ -117,7 +120,7 @@ void ReadCumulativeFileLine(map * cum_map, char * acp_line);
     @param acp_line A string representing 1 line result from ac -p.
     @returns -1 if acp_line is NULL or length is less than 1, otherwise 0.
 */
-int ReadAcpPipeLine(map *stmap, char * acp_line);
+int ReadAcpPipeLine(map *stmap, char *acp_line);
 
 /**
     Calculates the cumulative time for each student by subtracting map[studentID] from student.loginDuration.
@@ -128,6 +131,6 @@ int ReadAcpPipeLine(map *stmap, char * acp_line);
     @param arr_len The length of students array.
     @param cum_map A map mapping studentIds to their cumulative login time when the server was started.
 */
-void CalculateCumulative(Student * stud_arr, int stud_arr_len, map * cum_map);
+void CalculateCumulative(Student *stud_arr, int stud_arr_len, map *cum_map);
 
 #endif

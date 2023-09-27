@@ -1,10 +1,10 @@
 #ifndef Process_h
 #define Process_h
-/*
+/**
+    @brief Definitions for functions that manage control flow.
     This module handles the processes that this server might execute. It calls functions from the other modules to realize program changes.
 */
 #include "map.h"
-
 
 /**
     The lockfile serves as a signal to subsequent processes as to whether or not server is already running.
@@ -26,8 +26,8 @@
 short DoesLockfileExist();
 
 /**
-    Creates a lockfile. 
-    
+    Creates a lockfile.
+
     @warning This should only be called by a running server process when a lockfile does not already exist.
 
     The lockfile will carry a 'data reset' signal and a process ID. CreateLockfile will write the current processes PID.
@@ -44,7 +44,7 @@ int DeleteLockfile();
 /**
     Reads the lockfile to get the ID of the process that created it.
 
-    Sends a SIGTERM signal to that process. 
+    Sends a SIGTERM signal to that process.
 
     @warning lockfile should be confirmed to exist
     @returns -1 if file doesn't exist, -2, if no valid process ID existed in the file, 1 if sending the kill signal failed.
@@ -52,7 +52,7 @@ int DeleteLockfile();
 int TerminateExistingServer();
 
 /**
-    If we reset the user data, we need to indicate to the running process that a re-read is needed. This changes the flag in the lockfile to 1, but keeps the same process ID as before there. 
+    If we reset the user data, we need to indicate to the running process that a re-read is needed. This changes the flag in the lockfile to 1, but keeps the same process ID as before there.
 
     @warning should only be called by non main processes
 
@@ -61,7 +61,7 @@ int TerminateExistingServer();
 int IndicateRereadNeeded();
 
 /**
-    If we re-read the users file, we can indicate that we have done so by setting the re-read flag back to 0. 
+    If we re-read the users file, we can indicate that we have done so by setting the re-read flag back to 0.
 
     @warning should only be called by main process.
 */
@@ -75,7 +75,7 @@ int IndicateRereadDone();
 short IsRereadNeeded();
 
 /**
-    Called by a new server process, telling this server process to shut down. This sets 'is_stopping' to true, which shuts down the server gracefully, writing any necessary data to the user data file, then deleting the lockfile. 
+    Called by a new server process, telling this server process to shut down. This sets 'is_stopping' to true, which shuts down the server gracefully, writing any necessary data to the user data file, then deleting the lockfile.
 
     @param signo The signal number. Will be SIGTERM from the other server process or SIGINT if interrupted from the console.
 
@@ -84,10 +84,9 @@ short IsRereadNeeded();
 void SignalHandle(int signo);
 
 /**
-    If 0, the server is running and looping, rereading and writing every second. If 1, it is stopping and shutting down. 
+    If 0, the server is running and looping, rereading and writing every second. If 1, it is stopping and shutting down.
 */
 extern short is_stopping;
-
 
 // ~~~~~~~~~~~~~~~ CLI Commands ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -134,19 +133,16 @@ void ClearCommand();
 */
 void ResetCommand();
 
-
 /**
     Stops an existing server process if it is running.
 
     @note To execute the command, pass "stop" as an argument to the program.
-    @todo Actually stop the server.
 */
 void StopCommand();
 
 /**
     If a server exists, stops it. Begins the process loop.
 
-    @todo Stop existing server.
     @note To execute the command, pass "run" as an argument to the program.
 */
 void RunCommand();
@@ -156,7 +152,6 @@ void RunCommand();
 
     @note To execute the command, pass "help" as an argument to the program.
     @note This command will also run if arg num is incorrect or if invalid option is entered.
-    @todo colors?
 */
 void HelpCommand();
 
@@ -164,7 +159,6 @@ void HelpCommand();
     Uses nohup ./{processName} run to run the prodess headlessly.
     @param processName The name of the currently running process.
 */
-void RunHeadless(char * processName);
-
+void RunHeadless(char *processName);
 
 #endif

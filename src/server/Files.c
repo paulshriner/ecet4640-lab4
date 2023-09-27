@@ -1,3 +1,6 @@
+/**
+ * @brief Declarations of functions that operate on files..
+ */
 #include "Files.h"
 #include "util.h"
 #include <stdlib.h>
@@ -88,19 +91,23 @@ int WriteStudentArrayToFile(Student *students, int arr_len, char *file_name)
     return 0;
 }
 
-int CreateInitialCumulativeFile(char * file_name) {
+int CreateInitialCumulativeFile(char *file_name)
+{
     FILE *file = fopen(file_name, "w");
-    if(file == NULL) {
+    if (file == NULL)
+    {
         return -1;
     }
     FILE *pipe = popen("ac -p", "r");
-    if(pipe == NULL) {
+    if (pipe == NULL)
+    {
         fclose(file);
         return -2;
     }
 
     char line[100];
-    while(fgets(line, sizeof(line), pipe) != NULL) {
+    while (fgets(line, sizeof(line), pipe) != NULL)
+    {
         fputs(line, file);
     }
     pclose(pipe);

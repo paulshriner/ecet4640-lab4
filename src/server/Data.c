@@ -1,3 +1,6 @@
+/**
+ * @brief Data structures and constants.
+ */
 #include "Data.h"
 
 char *Data_IDs[DATA_NUM_RECORDS] = {

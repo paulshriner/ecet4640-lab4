@@ -1,3 +1,6 @@
+/**
+ * @brief Definitions for functions relating to a hashmap data structure.
+ */
 #include "stdlib.h"
 #include "string.h"
 #include "map.h"
@@ -36,7 +39,7 @@ int hash_string(int hash_table_size, char *string, int strlen)
     {
         hash *= -1;
     }
-    return hash % (hash_table_size-1)+1;
+    return hash % (hash_table_size - 1) + 1;
 }
 
 map *NewMap(int capacity)
@@ -95,10 +98,13 @@ void _bucket_get(struct _map_bucket *bucket, char *key, map_result *result)
             result->found = 1;
             result->data = check->data;
             return;
-        } else if (check->next != NULL)
+        }
+        else if (check->next != NULL)
         {
             check = check->next;
-        } else {
+        }
+        else
+        {
             result->found = 0;
             break;
         }

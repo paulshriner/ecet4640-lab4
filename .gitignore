@@ -3,3 +3,4 @@ linclude/
 /client
 /server
 /static-user-data.txt
+/docs/doxygen
