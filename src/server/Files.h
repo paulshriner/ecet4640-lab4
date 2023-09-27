@@ -1,17 +1,18 @@
 #ifndef Files_H
 #define Files_H
 /**
+ * \file Files.h
  * @brief Definitions for functions that operate on files.
+ * @details Some program data needs to be stored in files, to preserve it in the case of early termination.
+
+    There are three files that are created if they don't exist when the program is first run. 
+    
+    - STATIC_USER_DATA_FILE contains a list of userIDs, ages, gpa, and last login time. Age and gpa are randomly generated on server start and when "reset" is run. The login time is updated when it changes as per the dirty flag.
+    - STATIC_USER_CUMULATIVE_FILE contains the results of 'ac -p' run when the server first starts. These values will be subtracted from later pipes of "ac -p" to determine the cumulative time since the server started. 
+    - LOCKFILE contains a flag, 0 or 1, that indicates whether the STATIC_USER_DATA_FILE has been re-randomized and should be re-read. It contains the process ID of the running server process. It serves as an indicator to the process as to whether a server is already running and, when "close" is passed as a command line argument, which process to kill.
  */
 #include "Data.h"
 #include "map.h"
-
-/**
- *
-    Some program data needs to be stored in files, to preserve it in the case of early termination.
-
-    There are two files that are created if they don't exist when the program is first run. One has userIDs linked to their age, gpa, and last login time. The other has userIDs linked to the cumulative login time as determined by `ac -p` in order to determine the time logged in since program first ran.
-*/
 
 /**
     File name for the text file that will store user data, namely, the age, gpa, and last login time.
@@ -34,8 +35,21 @@
    File name for the text file that will store the cumulative login time for each user at the point in time when it was created.
 
    The values in this file are subtracted from the result of running 'ac -p' later to get the cumulative time each user was logged in since the server started.
+   @note Each line contains the following.
+   @note (1) A user ID
+   @note (2) An integer representing the minutes the user has been logged in.
 */
 #define STATIC_USER_CUMULATIVE_FILE "static-user-cumulative-start.txt"
+
+/**
+    The lockfile serves as a signal to subsequent processes as to whether or not server is already running.
+    
+    @note File contains the following
+    @note (1) a 1 or a 0 indicating whether the data has been reset and must be re-read
+    @note (2) an integer correcponding to the PID of the process so that server close can end that process
+
+*/
+#define LOCKFILE "/tmp/ecet-server.lock"
 
 /**
  * @brief Determines whether a file exists.
@@ -87,5 +101,32 @@ int FillStudentMapFromFile(map *student_map, char *file_name, char **id_list, in
    @returns 0 if succesful, -1 if the file couldn't be opened, -2 if the pipe couldn't be opened, otherwise an error code.
 */
 int CreateInitialCumulativeFile(char *file_name);
+
+
+
+// ~~~~~~~~~~~~~~~ Lockfile Commands ~~~~~~~~~~~~~~~~~~~~~
+
+/**
+    Determines if lockfile exists, which indicates that a server process is already running.
+
+    @returns 0 if lockfile does not exist, 1 if it does.
+*/
+short DoesLockfileExist();
+
+/**
+    Creates a lockfile.
+
+    @warning This should only be called by a running server process when a lockfile does not already exist.
+
+    The lockfile will carry a 'data reset' signal and a process ID. CreateLockfile will write the current processes PID.
+    @returns -1 if fopen failed, otherwise 0.
+*/
+int CreateLockfile();
+
+/**
+    Deletes the lockfile.
+    @returns 0 on success, -1 on failure.
+*/
+int DeleteLockfile();
 
 #endif

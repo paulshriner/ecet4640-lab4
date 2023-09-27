@@ -1,13 +1,10 @@
 /**
+ * \file memShare.c
  * @brief Definitions for functions that operate on a shared memory segment.
  */
 #include "memShare.h"
 #include <string.h>
 #include <stdio.h>
-
-/*
-    Todo: Error handling and printing
-*/
 
 int CreateSharedMemory()
 {

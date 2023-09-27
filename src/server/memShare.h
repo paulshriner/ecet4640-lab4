@@ -1,7 +1,13 @@
 #ifndef MEM_SHARE_H
 #define MEM_SHARE_H
 /**
+ * \file memShare.h
  * @brief Declarations for functions that operate on a shared memory segment.
+   @details To share data to clients program uses shared memory
+
+   - MEM_KEY is the key to access the shared memory and clients must have this info
+   - MEM_PERMISSIONS who has read, write permissions of the shared memory segment
+   - MEM_SIZE the total size of the shared memory allocation
  */
 
 #include <sys/shm.h>
@@ -32,7 +38,7 @@
 /**
     CreateSharedMemory retrieves a shared memory ID that can be used to access or delete shared memory.
 
-    @returns A shared memory ID that can be used with other 'shm' commands to access shared memory.
+    @returns A shared memory ID that can be used with other 'shm' commands to access shared memory, -1 if an error has occured
 */
 int CreateSharedMemory();
 
@@ -54,8 +60,10 @@ int DestroySharedMemory();
 */
 void *GetMemoryPointer(int shared_mem_id);
 
-/*
+/**
     Release a shm memory pointer.
+    @param shmaddr The memory pointer to release.
+    @returns Whether the operation was succesful.
 */
 int ReleaseMemoryPointer(void *shmaddr);
 

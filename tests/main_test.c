@@ -25,7 +25,6 @@ void RunAllTests(void)
     CuSuiteSummary(suite, output);
     CuSuiteDetails(suite, output);
     printf("%s\n", output->buffer);
-    return 0;
 }
 
 int main(void)

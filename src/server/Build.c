@@ -1,4 +1,5 @@
 /**
+ * \file Build.c
  * @brief Definitions for functions that populate data structures.
  */
 #include "Build.h"
@@ -20,7 +21,6 @@ void PopulateStudents(char **studentIDs, char **studentNames, int arsize)
     {
         strcpy(students[i].userID, studentIDs[i]);
         strcpy(students[i].fullName, studentNames[i]);
-        // students[i].age = randAge(18, 22);
     }
 }
 
