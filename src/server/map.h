@@ -2,8 +2,8 @@
 #define map_h
 
 /**
- * \file map.h
- * @brief Definitions for functions that operate on a hash map data structure.
+ * \defgroup map
+ * @brief Functions that implement a hash map data structure.
  * @details Karl's take on a simple hash map structure, which maps strings to void pointers. You can use casting to convert the void pointers into most of whatever else is needed.
  *
  * Example usage, casting an int into the data part of the map.
@@ -35,7 +35,7 @@
  * Delete some values from it. For example Map_Delete(mymap, "key", 0);
  *
  * Note that the last parameter, 'free it', tells the map whether it should call 'free' on the underyling data in memory. If this is 1, and the underyling data is not a reference to a malloced part of the heap, errors will result.
- *
+ * @{
  */
 
 // -----------------------------
@@ -46,6 +46,7 @@
  * @brief Get's a log2 ceiling. Eg, hash_log2(5) == 3.
  * @param number_to_log The number to calculate the log of.
  * @returns The log ceiling; eg, the lowest exponent to raise 2 with which would yield a number greater or equal to number_to_log.
+ * @private
  */
 int hash_log2(int number_to_log);
 
@@ -56,6 +57,7 @@ int hash_log2(int number_to_log);
  * @param string The key to hash.
  * @param strlen The length of the key.
  * @returns The index of the bucket that should be used.
+ * @private
  */
 int hash_string(int hash_table_capacity, char *string, int strlen);
 
@@ -63,6 +65,7 @@ int hash_string(int hash_table_capacity, char *string, int strlen);
  * @brief This calculates what the actual capacity of the map will be. Given a result from hash_log2, it gets the maximum storable for that many bits. For example, hash_upperLimit(3) returns the maximum that 3 bits can hold, which is 8. hash_upperLimit(4) returns 16.
  * @param bitsize The number of bits to calculate the max from.
  * @returns The max value that number of bits can hold.
+ * @private
  */
 int hash_upperLimit(int bitsize);
 
@@ -77,28 +80,28 @@ int hash_upperLimit(int bitsize);
 */
 struct _map_bucket
 {
-    // The key associated with this bucket.
+    /// The key associated with this bucket.
     char *key;
-    // The data this bucket holds.
+    /// The data this bucket holds.
     void *data;
-    // The next node in this linked list, or NULL if it is a leaf.
+    /// The next node in this linked list, or NULL if it is a leaf.
     struct _map_bucket *next;
 };
 
 /**
    @brief A map. Stores key-value pairs for near constant lookup and insertion time.
 
-   @note Use `NewMap` to create a new map.
-   @note Use Map_Set to set a key in the map.
-   @note Use Map_Get to get a value from the map.
+   @note Use NewMap() to create a new map.
+   @note Use Map_Set() to set a key in the map.
+   @note Use Map_Get() to get a value from the map.
 
    The values stored are of type void pointer.
 */
 typedef struct
 {
-    // The number of base buckets in this map.
+    /// The number of base buckets in this map.
     int size;
-    // The buckets for this map.
+    /// The buckets for this map.
     struct _map_bucket *buckets;
 } map;
 
@@ -107,9 +110,9 @@ typedef struct
 */
 typedef struct
 {
-    // 1 if succesfully found. 0 if not found.
+    /// 1 if succesfully found. 0 if not found.
     short found;
-    // The data linked with that key; indeterminate if found == 0.
+    /// The data linked with that key; indeterminate if found == 0.
     void *data;
 } map_result;
 

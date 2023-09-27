@@ -12,9 +12,23 @@
 
  # Intro
 
-  This program reads user information using the `who` command and publishes that information to shared virtual memory for client processes to read. It updates every second.
+  This program reads user information using the `who` and `ac -p` commands and publishes that information as an array of Student structures to shared virtual memory for client processes to read. It updates every second.
 
   The main.c page is a good starting point for following the program control flow.
+
+ # Contributions
+
+ - On 9/14 all group members collaborated on VSCode LiveShare to implement the program skeleton, including the testing framework.
+ - On 9/17 Karl started the client and worked on memshare.
+ - On 9/18 all group members collaborated to start Build, Data, and memShare.
+ - On 9/20 Christian worked on functions to randomize and create the initial data and started the processing of the who pipe.
+ - On 9/21 all group members collaborated to fix up memshare and read files.
+ - On 9/22 Karl added the map and worked to populate data structures from files.
+ - On 9/23 Karl finished the reading who process and the control flow.
+ - On 9/24 Paul worked on handling command line arguments.
+ - On 9/25 Karl implemented the ac -p cumulative times and headless running.
+ - On 9/26 Karl and Christian started documentation.
+ - On 9/27 all group members collaborated to finish the documentation.
   
  # Overview
 
