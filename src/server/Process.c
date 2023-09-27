@@ -1,4 +1,5 @@
 /**
+ * \file Process.c
  * @brief Definitions for functions that manage control flow.
  */
 
@@ -16,30 +17,6 @@
 
 map *student_map;
 map *initial_cumulative_times;
-
-// ~~~~~~~~~~~~~~~ Lockfile Commands ~~~~~~~~~~~~~~~~~~~~~
-
-short DoesLockfileExist()
-{
-    return FileExists(LOCKFILE);
-}
-
-int CreateLockfile()
-{
-    FILE *file = fopen(LOCKFILE, "w");
-    if (file == NULL)
-    {
-        return -1;
-    }
-    fprintf(file, "0 %d", getpid());
-    fclose(file);
-    return 0;
-}
-
-int DeleteLockfile()
-{
-    return remove(LOCKFILE);
-}
 
 int TerminateExistingServer()
 {
@@ -108,6 +85,8 @@ void SignalHandle(int signo)
     {
         is_stopping = 1;
     }
+    // possible feature: add a timeout terminate emergency exit (with graceful shutdown)
+    
 }
 
 short is_stopping = 0;

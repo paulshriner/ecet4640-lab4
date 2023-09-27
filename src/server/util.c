@@ -1,4 +1,5 @@
 /**
+ * \file util.c
  * @brief Definitions for helper functions.
  */
 #include "util.h"

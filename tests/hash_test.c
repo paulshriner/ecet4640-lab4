@@ -4,6 +4,7 @@
 #include "map.h"
 #include "string.h"
 #include "stdio.h"
+#include "stdlib.h"
 
 void testHashLog(CuTest *tc)
 {
@@ -24,7 +25,7 @@ void testHashStrings(CuTest *tc)
     int log_ars = hash_log2(arsize);
     int alloc_size = hash_upperLimit(log_ars);
 
-    int results[alloc_size];
+    int* results = malloc(alloc_size * sizeof(int));
     int i, misses = 0;
     for (i = 0; i < alloc_size; i++)
     {
@@ -45,7 +46,8 @@ void testHashStrings(CuTest *tc)
             results[result] = 1;
         }
     }
-    CuAssertIntEquals_Msg(tc, "Should be few misses", misses < 10, 1);
+    CuAssertIntEquals_Msg(tc, "Should be few misses", 1, misses < 10);
+    free(results);
 }
 
 CuSuite *hashTestGetSuite()

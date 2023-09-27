@@ -1,5 +1,6 @@
 /**
- * @brief Definitions for functions relating to a hashmap data structure.
+ * \file map.c
+ * @brief Definitions for functions relating to a hash map data structure.
  */
 #include "stdlib.h"
 #include "string.h"
@@ -39,7 +40,7 @@ int hash_string(int hash_table_size, char *string, int strlen)
     {
         hash *= -1;
     }
-    return hash % (hash_table_size - 1) + 1;
+    return hash % hash_table_size;
 }
 
 map *NewMap(int capacity)

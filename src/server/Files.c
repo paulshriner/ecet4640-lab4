@@ -1,4 +1,5 @@
 /**
+ * \file Files.c
  * @brief Declarations of functions that operate on files..
  */
 #include "Files.h"
@@ -6,6 +7,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <strings.h>
+#include <unistd.h>
 
 short FileExists(char *file_name_to_check)
 {
@@ -113,4 +115,28 @@ int CreateInitialCumulativeFile(char *file_name)
     pclose(pipe);
     fclose(file);
     return 0;
+}
+
+// ~~~~~~~~~~~~~~~ Lockfile Commands ~~~~~~~~~~~~~~~~~~~~~
+
+short DoesLockfileExist()
+{
+    return FileExists(LOCKFILE);
+}
+
+int CreateLockfile()
+{
+    FILE *file = fopen(LOCKFILE, "w");
+    if (file == NULL)
+    {
+        return -1;
+    }
+    fprintf(file, "0 %d", getpid());
+    fclose(file);
+    return 0;
+}
+
+int DeleteLockfile()
+{
+    return remove(LOCKFILE);
 }

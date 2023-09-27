@@ -2,10 +2,11 @@
 #define map_h
 
 /**
+ * \file map.h
  * @brief Definitions for functions that operate on a hash map data structure.
- * Karl's take on a simple hashmap map structure, which maps strings to void pointers. You can use casting to convert the void pointers into most of whatever else is needed.
+ * @details Karl's take on a simple hash map structure, which maps strings to void pointers. You can use casting to convert the void pointers into most of whatever else is needed.
  *
- * Example usage, casting an into the data part of the map.
+ * Example usage, casting an int into the data part of the map.
  *
  * ```c
  * int myfunc() {
@@ -35,9 +36,6 @@
  *
  * Note that the last parameter, 'free it', tells the map whether it should call 'free' on the underyling data in memory. If this is 1, and the underyling data is not a reference to a malloced part of the heap, errors will result.
  *
- * ------ Some Improvements.
- * 1. Map can free on delete. We could have a Map_Set(map, key, char *) that will automatically malloc a string on set, to simplify string to string maps.
- * 2. We could have convenience methods that auto-cast for various types of data. Eg. Map_GetTime...
  */
 
 // -----------------------------

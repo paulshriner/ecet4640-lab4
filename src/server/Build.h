@@ -1,6 +1,7 @@
 #ifndef BUILD_H
 #define BUILD_H
 /**
+ * \file Build.h
  * @brief Declarations for functions that populate data structures.
  */
 
@@ -10,9 +11,9 @@
 // ~~~~~~~~  Data Structures ~~~~~~~~~
 
 /**
-   The underlying students array. Will be heap allocated with malloc, after PopulateStudents is called.
+   A pointer to the students array. It is heap allocated with malloc, when PopulateStudents is called.
 
-   Generally this array and its length are still passed around via parameters, to decouple as much as possible and enable simple testing and dummy data.
+   @note Generally this array and its length are passed around via parameters, to decouple as much as possible and enable simple testing and dummy data.
 */
 extern Student *students;
 
@@ -26,7 +27,7 @@ extern Student *students;
 void PopulateStudents(char **studentIDs, char **studentNames, int arsize);
 
 /**
-   Given a student array, populates a student map, where the student IDs are the key, and the values are pointers to the items in the array.
+   Given a student array, populates a student map, where the student IDs are the key, and the values are pointers to items in the array.
    @param map The map structure to populate.
    @param studentArr An array of student structures.
    @param studentArrLength The length of the students array.
@@ -62,7 +63,7 @@ int UpdateFromWho(map *stmap);
 int ProcessWhoLine(map *stmap, char *whoLine, int whoLineLength);
 
 /**
-    Sets the 'active' member on all students in the students array to 0.
+    Sets the 'active' property on all students in the students array to 0.
 
     @param stud_arr The students array.
     @param arr_len The length of the students array.
@@ -85,7 +86,7 @@ void WriteStudentsToMemory(void *mem_ptr, Student *stud_arr, int arr_len);
     Populates the cumulative map by reading from the initial cumulative file. The map will be of the form [userID] -> minutes_float
 
     The map will contain users who we don't care about, but it doesn't matter.
-    @param cum_map A map of cumulative times. Different from the students map.
+    @param time_map A map of cumulative times. Different from the students map.
     @param filename The filename where the initial cumulative times are located.
 
     @returns 0 if success. -1 if it failed to find the file.
@@ -107,11 +108,11 @@ int ReadACP(map *st_map);
 
     @note A line is structured like this: `	mes08346                            10.06`
     It finishes with a line starting with `total `; this line should be disregarded.
-    @param cum_map The cumulative map.
+    @param time_map The cumulative map.
     @param acp_line A single line from ac -p.
     @returns -1 ...
 */
-void ReadCumulativeFileLine(map *cum_map, char *acp_line);
+void ReadCumulativeFileLine(map *time_map, char *acp_line);
 
 /**
     Reads a single line from the result of ac -p into the students map.
@@ -123,14 +124,14 @@ void ReadCumulativeFileLine(map *cum_map, char *acp_line);
 int ReadAcpPipeLine(map *stmap, char *acp_line);
 
 /**
-    Calculates the cumulative time for each student by subtracting map[studentID] from student.loginDuration.
+    Calculates the cumulative time for each student by subtracting cum_map[studentID] from student.loginDuration.
 
-    @warning student.loginDuration must have already been set to the total cumulative time logged in.
+    @warning each student.loginDuration must have already been set to the total cumulative time logged in.
 
     @param stud_arr The student's array.
     @param arr_len The length of students array.
-    @param cum_map A map mapping studentIds to their cumulative login time when the server was started.
+    @param time_map A map mapping studentIds to their cumulative login time when the server was started.
 */
-void CalculateCumulative(Student *stud_arr, int stud_arr_len, map *cum_map);
+void CalculateCumulative(Student *stud_arr, int stud_arr_len, map *time_map);
 
 #endif
