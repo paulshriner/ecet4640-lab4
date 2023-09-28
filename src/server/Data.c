@@ -1,6 +1,6 @@
 /**
- * \file Data.c
- * @brief Data structures and constants.
+ * \addtogroup Data
+ * @{
  */
 #include "Data.h"
 
@@ -41,3 +41,7 @@ char *Data_Names[DATA_NUM_RECORDS] = {
     "Paul Shriner",
     "Alan Vayansky",
     "Assefa Ayalew Yoseph"};
+
+/**
+ * @}
+*/

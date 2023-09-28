@@ -1,6 +1,6 @@
 /**
- * \file Files.c
- * @brief Declarations of functions that operate on files..
+ * \addtogroup Files
+ * @{
  */
 #include "Files.h"
 #include "util.h"
@@ -140,3 +140,6 @@ int DeleteLockfile()
 {
     return remove(LOCKFILE);
 }
+/**
+ * @}
+*/

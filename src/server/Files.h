@@ -1,8 +1,8 @@
 #ifndef Files_H
 #define Files_H
 /**
- * \file Files.h
- * @brief Definitions for functions that operate on files.
+ * \defgroup Files
+ * @brief The Files module contains functions which operate on files.
  * @details Some program data needs to be stored in files, to preserve it in the case of early termination.
 
     There are three files that are created if they don't exist when the program is first run. 
@@ -10,6 +10,7 @@
     - STATIC_USER_DATA_FILE contains a list of userIDs, ages, gpa, and last login time. Age and gpa are randomly generated on server start and when "reset" is run. The login time is updated when it changes as per the dirty flag.
     - STATIC_USER_CUMULATIVE_FILE contains the results of 'ac -p' run when the server first starts. These values will be subtracted from later pipes of "ac -p" to determine the cumulative time since the server started. 
     - LOCKFILE contains a flag, 0 or 1, that indicates whether the STATIC_USER_DATA_FILE has been re-randomized and should be re-read. It contains the process ID of the running server process. It serves as an indicator to the process as to whether a server is already running and, when "close" is passed as a command line argument, which process to kill.
+    @{
  */
 #include "Data.h"
 #include "map.h"
@@ -128,5 +129,8 @@ int CreateLockfile();
     @returns 0 on success, -1 on failure.
 */
 int DeleteLockfile();
+/**
+ * @}
+*/
 
 #endif

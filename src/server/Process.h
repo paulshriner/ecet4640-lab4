@@ -1,13 +1,13 @@
 #ifndef Process_h
 #define Process_h
 /**
- * \file Process.h
-    @brief Declarations for functions that manage control flow.
-    This module handles the processes that this server might execute. It calls functions from the other modules to realize program changes.
+ * \defgroup Process
+    @brief Functions that manage control flow.
+    @details This module handles the processes that this server might execute. It calls functions from the other modules to realize program changes.
+
+    It contains the main update loop for a running server, Process(), as well as functions for implementing the different command line argument driven procedures.
 */
 #include "map.h"
-
-
 
 /**
     Reads the lockfile to get the ID of the process that created it.
@@ -95,16 +95,15 @@ void Process(int shm_id);
 void ResetCommand();
 
 /**
-    Stops an existing server process if it is running.
+    Stops an existing server process if it is running by calling `kill` on the pid stored in the Lockfile.
 
     @note To execute the command, pass "stop" as an argument to the program.
 */
 void StopCommand();
 
 /**
-    If a server exists, it will be stopped. Then, the process loop will begin.
-
-    @note To execute the command, pass "run" as an argument to the program.
+ * @brief Runs the server if it doesn't already exist.
+ * @details This function begins the Process() loop. It is ultimately called via two cli arguments; "run" and "headless".
 */
 void RunCommand();
 
@@ -117,9 +116,12 @@ void RunCommand();
 void HelpCommand();
 
 /**
-    Uses nohup ./{processName} run to run the process headlessly.
-    @param processName The name of the currently running process.
+    Uses nohup `./{processName} run` to run the process headlessly.
+    @param processName The name of the currently running process, by default, 'server'.
 */
 void RunHeadless(char *processName);
+/**
+ * @}
+*/
 
 #endif

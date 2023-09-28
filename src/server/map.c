@@ -1,6 +1,6 @@
 /**
- * \file map.c
- * @brief Definitions for functions relating to a hash map data structure.
+ * \addtogroup map
+ * @{
  */
 #include "stdlib.h"
 #include "string.h"
@@ -25,6 +25,7 @@ int hash_upperLimit(int bitsize)
     return 1 << bitsize;
 }
 
+/// @private
 int char_ratio = (int)(sizeof(int) / sizeof(char));
 
 // Modified some stuff from : http://isthe.com/chongo/tech/comp/fnv/
@@ -186,3 +187,6 @@ map_result Map_Delete(map *a_map, char *key, short free_it)
 
     return res;
 }
+/**
+ * @}
+*/

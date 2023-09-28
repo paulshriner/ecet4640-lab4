@@ -1,6 +1,6 @@
 /**
- * \file memShare.c
- * @brief Definitions for functions that operate on a shared memory segment.
+ * \addtogroup memShare
+ * @{ 
  */
 #include "memShare.h"
 #include <string.h>
@@ -29,3 +29,6 @@ int ReleaseMemoryPointer(void *shmaddr)
 {
     return shmdt(shmaddr);
 }
+/**
+ * @}
+*/
