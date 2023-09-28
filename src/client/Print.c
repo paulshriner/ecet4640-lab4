@@ -39,7 +39,7 @@ void PrintStudentRow(Student *student)
     if (student->lastLogin == 0) {
         printf("%18s ", "UNKNOWN");
     } else {
-        printf("%5d/%d/%d %02d:%02d", mm, dd, 1900 + yy, hr, mn);
+        printf("%5d/%d/%d %02d:%02d", 1 + mm, dd, 1900 + yy, hr, mn);
     }
     printf("%10d", student->loginDuration);
     printf("\n");

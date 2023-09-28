@@ -174,12 +174,11 @@ int PipeAcpToStudentMap(map *st_map)
     return 0;
 }
 
-void ReadCumulativeFileLine(map *cum_map, char *acp_line)
+void ReadCumulativeFileLine(map *time_map, char *acp_line)
 {
     char userId[20];
     float hours;
     sscanf(acp_line, " %s %f ", userId, &hours);
-    // int seconds = (int) (minutes * 60)
     long seconds = (long)(hours * 60 *60);
     // if(strcmp(userId, "mil7233") == 0) {
     //     printf("Cum file line for %s seconds = %ld\n", userId, seconds);
@@ -187,7 +186,7 @@ void ReadCumulativeFileLine(map *cum_map, char *acp_line)
     Trim(userId);
     char* key = malloc( (strlen(userId)+1) * sizeof(char));
     strcpy(key, userId);
-    Map_Set(cum_map, key, (void *)seconds);
+    Map_Set(time_map, userId, (void *)seconds);
 }
 
 int ReadAcpPipeLine(map *stmap, char *acp_line)
@@ -213,13 +212,12 @@ int ReadAcpPipeLine(map *stmap, char *acp_line)
     return 0;
 }
 
-
-void CalculateCumulative(Student *stud_arr, int stud_arr_len, map *cum_map)
+void CalculateCumulative(Student *stud_arr, int stud_arr_len, map *time_map)
 {
     int i;
     for (i = 0; i < stud_arr_len; i++)
     {
-        map_result result = Map_Get(cum_map, stud_arr[i].userID);
+        map_result result = Map_Get(time_map, stud_arr[i].userID);
         if (result.found)
         {
             
