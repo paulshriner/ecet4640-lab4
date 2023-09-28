@@ -74,46 +74,45 @@ int hash_upperLimit(int bitsize);
 // ------------------------------------
 
 /**
+ * @struct _map_bucket
     @brief map_bucket is an endpoint in the map. It is also a node in a linked list; if there were collisions, then the buckets are appended to the linked list at that location, then traversed until the matching key is found.
-
     @private
 */
 struct _map_bucket
 {
-    /// The key associated with this bucket.
+    /// @private
     char *key;
-    /// The data this bucket holds.
+    /// @private
     void *data;
-    /// The next node in this linked list, or NULL if it is a leaf.
+    /// @private
     struct _map_bucket *next;
 };
 
 /**
-   @brief A map. Stores key-value pairs for near constant lookup and insertion time.
+ * \struct map
+   \brief A map. Stores key-value pairs for near constant lookup and insertion time.
 
-   @note Use NewMap() to create a new map.
-   @note Use Map_Set() to set a key in the map.
-   @note Use Map_Get() to get a value from the map.
+   \note Use NewMap() to create a new map.
+   \note Use Map_Set() to set a key in the map.
+   \note Use Map_Get() to get a value from the map.
 
    The values stored are of type void pointer.
 */
 typedef struct
 {
-    /// The number of base buckets in this map.
-    int size;
-    /// The buckets for this map.
-    struct _map_bucket *buckets;
+    int size; /** \property The number of base buckets in this map. */
+    struct _map_bucket *buckets; /** The buckets for this map.  \property  */
 } map;
 
 /**
+    @struct map_result
     @brief The result of a map retrieval.
 */
 typedef struct
 {
-    /// 1 if succesfully found. 0 if not found.
-    short found;
-    /// The data linked with that key; indeterminate if found == 0.
-    void *data;
+    
+    short found; /** 1 if succesfully found. 0 if not found.  \property */
+    void *data; /** The data linked with that key; indeterminate if found == 0.  \property */
 } map_result;
 
 /**
