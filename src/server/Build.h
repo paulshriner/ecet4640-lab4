@@ -1,8 +1,9 @@
 #ifndef BUILD_H
 #define BUILD_H
 /**
- * \file Build.h
- * @brief Declarations for functions that populate data structures.
+ * \defgroup Build
+ * @brief Functions that populate data structures.
+ * @details These functions perform actions that involve populating maps and arrays.
  */
 
 #include "Data.h"
@@ -11,9 +12,9 @@
 // ~~~~~~~~  Data Structures ~~~~~~~~~
 
 /**
-   A pointer to the students array. It is heap allocated with malloc, when PopulateStudents is called.
+   A pointer to the students array. It is heap allocated with malloc, when PopulateStudents() is called.
 
-   @note Generally this array and its length are passed around via parameters, to decouple as much as possible and enable simple testing and dummy data.
+   @note This array and its length are passed around via parameters, to decouple as much as possible and enable simple testing and dummy data, even though it is globally available.
 */
 extern Student *students;
 
@@ -45,7 +46,7 @@ extern short dirty;
     @param stmap The student map.
     @returns 0 if succesful, otherwise nonzero.
 */
-int UpdateFromWho(map *stmap);
+int PipeWhoToStudentMap(map *stmap);
 
 /**
 
@@ -83,7 +84,7 @@ void WriteStudentsToMemory(void *mem_ptr, Student *stud_arr, int arr_len);
 // ~~~~~~~~  Cumulative Processing ~~~~~~~~~
 
 /**
-    Populates the cumulative map by reading from the initial cumulative file. The map will be of the form [userID] -> minutes_float
+    Populates the cumulative map by reading from the initial cumulative file. The map will be of the form [userID] -> long seconds
 
     The map will contain users who we don't care about, but it doesn't matter.
     @param time_map A map of cumulative times. Different from the students map.
@@ -99,18 +100,17 @@ int ReadInitialCumulative(map *time_map, char *filename);
     @note After this runs, the student map cumulative will be their total login time in the system. This total time must be subtracted from the cumulative map time to find the time they have been logged in since the program started.
 
     @param st_map The students map.
-    @returns 0 on success.
+    @returns 0 on success. -1 if the pipe could not be opened. Otherwise an error from ReadAcpPipeLine().
 */
-int ReadACP(map *st_map);
+int PipeAcpToStudentMap(map *st_map);
 
 /**
-    Reads a single line from the initial cumulative file and updates the map so that userID maps to a float value in the initial file.
+    Reads a single line from the initial cumulative file and updates the map so that userID maps to a long seconds value in the initial file.
 
     @note A line is structured like this: `	mes08346                            10.06`
     It finishes with a line starting with `total `; this line should be disregarded.
     @param time_map The cumulative map.
     @param acp_line A single line from ac -p.
-    @returns -1 ...
 */
 void ReadCumulativeFileLine(map *time_map, char *acp_line);
 
@@ -133,5 +133,9 @@ int ReadAcpPipeLine(map *stmap, char *acp_line);
     @param time_map A map mapping studentIds to their cumulative login time when the server was started.
 */
 void CalculateCumulative(Student *stud_arr, int stud_arr_len, map *time_map);
+
+/**
+ * @}
+*/
 
 #endif

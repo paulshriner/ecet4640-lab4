@@ -1,25 +1,26 @@
 #ifndef MEM_SHARE_H
 #define MEM_SHARE_H
 /**
- * \file memShare.h
- * @brief Declarations for functions that operate on a shared memory segment.
+ * \defgroup memShare
+ * @brief Functions that operate on a shared memory segment.
    @details To share data to clients program uses shared memory
 
    - MEM_KEY is the key to access the shared memory and clients must have this info
    - MEM_PERMISSIONS who has read, write permissions of the shared memory segment
    - MEM_SIZE the total size of the shared memory allocation
+   @{
  */
 
 #include <sys/shm.h>
 #include <sys/ipc.h>
 #include "Data.h"
 
-/*
+/**
     The shared memory key that clients and servers will use to identify the segment.
 */
 #define MEM_KEY 0x727
 
-/*
+/**
     Memory permissions are:
         Self:   RW    110 = 6
         Group:  R     100 = 4
@@ -30,7 +31,7 @@
 */
 #define MEM_PERMISSIONS 0664
 
-/*
+/**
     The memory allocation must as large as the data size times the number of records.
 */
 #define MEM_SIZE DATA_SIZE *DATA_NUM_RECORDS
@@ -66,5 +67,7 @@ void *GetMemoryPointer(int shared_mem_id);
     @returns Whether the operation was succesful.
 */
 int ReleaseMemoryPointer(void *shmaddr);
-
+/**
+ * @}
+*/
 #endif

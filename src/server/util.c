@@ -1,10 +1,11 @@
 /**
- * \file util.c
- * @brief Definitions for helper functions.
+ * \addtogroup util
+ * @{
  */
 #include "util.h"
 
 #include <stdlib.h>
+#include <string.h>
 
 int RandomInteger(int min, int max)
 {
@@ -28,3 +29,21 @@ short RandomFlag(float percentage_chance)
     }
     return 0;
 }
+
+void Trim(char * string)
+{
+    size_t len = strlen(string);
+    int i;
+    for(i = 0; i < len; i++)
+    {
+        if(string[i] == ' ' || string[i] == '\t' || string[i] == '\n')
+        {
+            string[i] = '\0';
+            break;
+        }
+    }
+}
+
+/**
+ * @}
+*/

@@ -1,6 +1,6 @@
 /**
- * \file Process.c
- * @brief Definitions for functions that manage control flow.
+ * \addtogroup Process
+ * @{
  */
 
 #include "Process.h"
@@ -16,6 +16,7 @@
 #include <string.h>
 
 map *student_map;
+/// A map of userIDs to integer seconds. These values are subtracted from the current total cumulative time for each user to calculate their cumulative time since the server process started.
 map *initial_cumulative_times;
 
 int TerminateExistingServer()
@@ -152,7 +153,7 @@ void Process(int shm_id)
         IndicateRereadDone();
     }
     SetAllStudentsInactive(students, DATA_NUM_RECORDS);
-    int err = ReadACP(student_map);
+    int err = PipeAcpToStudentMap(student_map);
     if (err)
     {
         printf("Error piping ac -p command! \n");
@@ -161,7 +162,7 @@ void Process(int shm_id)
     {
         CalculateCumulative(students, DATA_NUM_RECORDS, initial_cumulative_times);
     }
-    err = UpdateFromWho(student_map);
+    err = PipeWhoToStudentMap(student_map);
     if (err)
     {
         perror("Error updating from who!");
@@ -243,7 +244,7 @@ void StopCommand()
 {
     printf("\nStopping server...\n");
     int err = TerminateExistingServer();
-    if (err)
+    if (err != 0)
     {
         if (err == -1)
         {
@@ -323,3 +324,6 @@ void RunHeadless(char *processName)
     popen(commandFull, "we");
     printf("Server running headlessly.\n");
 }
+/**
+ * @}
+*/

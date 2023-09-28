@@ -1,10 +1,11 @@
 #ifndef util_h
 #define util_h
 /**
- * \file util.h
- * @brief Declarations for helper functions.
+ * \addtogroup util
+ * @brief Helper functions.
  *
- * Contains utility functions that are not coupled to any other data or structures in the program.
+ * Contains utility functions that are not coupled to any other data or structures in the program. Contains randomization functions.
+ * @{
  */
 
 /**
@@ -30,5 +31,14 @@ float RandomFloat(float min, float max);
     @returns 1 or 0
 */
 short RandomFlag(float percentage_chance);
+
+/**
+ * Trims a string by setting the first whitespace character found to the null-terminator.
+ * @param string The string to trim.
+*/
+void Trim(char * string);
+/**
+ * @}
+*/
 
 #endif

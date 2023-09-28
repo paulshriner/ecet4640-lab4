@@ -1,9 +1,10 @@
 /**
- * \file Build.c
- * @brief Definitions for functions that populate data structures.
+ * \addtogroup Build
+ * @{
  */
 #include "Build.h"
 #include "memShare.h"
+#include "util.h"
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -37,7 +38,7 @@ void BuildStudentMap(map *stmap, Student *studentArr, int studentArrLength)
 
 short dirty = 1; // start dirty
 
-int UpdateFromWho(map *stmap)
+int PipeWhoToStudentMap(map *stmap)
 {
     char command[4] = "who";
     char line[100];
@@ -149,7 +150,7 @@ int ReadInitialCumulative(map *time_map, char *filename)
     return 0;
 }
 
-int ReadACP(map *st_map)
+int PipeAcpToStudentMap(map *st_map)
 {
     char command[6] = "ac -p";
     char line[300];
@@ -176,10 +177,15 @@ int ReadACP(map *st_map)
 void ReadCumulativeFileLine(map *time_map, char *acp_line)
 {
     char userId[20];
-    float minutes;
-    sscanf(acp_line, " %s %f ", userId, &minutes);
-    // int seconds = (int) (minutes * 60)
-    long seconds = (long)(minutes * 60);
+    float hours;
+    sscanf(acp_line, " %s %f ", userId, &hours);
+    long seconds = (long)(hours * 60 *60);
+    // if(strcmp(userId, "mil7233") == 0) {
+    //     printf("Cum file line for %s seconds = %ld\n", userId, seconds);
+    // }
+    Trim(userId);
+    char* key = malloc( (strlen(userId)+1) * sizeof(char));
+    strcpy(key, userId);
     Map_Set(time_map, userId, (void *)seconds);
 }
 
@@ -190,14 +196,18 @@ int ReadAcpPipeLine(map *stmap, char *acp_line)
         return -1;
     }
     char userId[40];
-    float minutes;
-    sscanf(acp_line, "%s %f", userId, &minutes);
+    float hours;
+    sscanf(acp_line, "%s %f", userId, &hours);
     map_result result = Map_Get(stmap, userId);
     if (result.found)
     {
         Student *student = (Student *)result.data;
-        int seconds = (int)(minutes * 60);
+        int seconds = (int)(hours * 60*60);
         student->loginDuration = seconds;
+        // if(strcmp(userId, "mil7233")==0) {
+        //     printf("ACP pipe for %s student quant = %f\n", userId, hours);
+        //     printf(" --- int seconds = %d\n", seconds);
+        // }
     }
     return 0;
 }
@@ -210,8 +220,18 @@ void CalculateCumulative(Student *stud_arr, int stud_arr_len, map *time_map)
         map_result result = Map_Get(time_map, stud_arr[i].userID);
         if (result.found)
         {
+            
             long time_at_server_start = (long)result.data;
             stud_arr[i].loginDuration = stud_arr[i].loginDuration - time_at_server_start;
+            // if(strcmp("mil7233", stud_arr->userID) == 0) {
+            //     printf("calc cum: found user %s.\n", stud_arr[i].userID);
+            //     printf(" tot time now: %ld\n", stud_arr[i].loginDuration);
+            //     printf(" time at server start: %ld\n", time_at_server_start);
+            //     printf(" new duration: %ld\n", stud_arr[i].loginDuration);
+            // }
         }
     }
 }
+/**
+ * @}
+*/
