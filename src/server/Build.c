@@ -186,7 +186,7 @@ void ReadCumulativeFileLine(map *time_map, char *acp_line)
     Trim(userId);
     char* key = malloc( (strlen(userId)+1) * sizeof(char));
     strcpy(key, userId);
-    Map_Set(time_map, userId, (void *)seconds);
+    Map_Set(time_map, key, (void *)seconds);
 }
 
 int ReadAcpPipeLine(map *stmap, char *acp_line)
@@ -211,12 +211,42 @@ int ReadAcpPipeLine(map *stmap, char *acp_line)
     }
     return 0;
 }
+// void printMap(map *map)
+// {
+//     printf("Info on map of capacity %d.\n", map->size);
+//     int i, j;
+//     for (i = 0; i < map->size; i++)
+//     {
+//         struct _map_bucket buck = map->buckets[i];
+//         if (buck.key == NULL)
+//         {
+//             if (buck.next != NULL)
+//             {
+//                 printf("Error on hash %d. Was null, but had next.\n", i);
+//             }
+//         }
+//         else
+//         {
+//             j = 1;
+//             printf("%s", buck.key);
+//             while (buck.next != NULL)
+//             {
+//                 buck = *(buck.next);
+//                 printf(" %s ", buck.key);
+//             }
+//             printf(" | Hash %d has %d items.\n", i, j);
+//         }
+//     }
+// }
 
 void CalculateCumulative(Student *stud_arr, int stud_arr_len, map *time_map)
 {
+    // printf("Map at time cumulative called\n");
+    // printMap(time_map);
     int i;
     for (i = 0; i < stud_arr_len; i++)
     {
+        // printf("\nLooking up %s\n", stud_arr[i].userID);
         map_result result = Map_Get(time_map, stud_arr[i].userID);
         if (result.found)
         {

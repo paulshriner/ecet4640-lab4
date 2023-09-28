@@ -7,6 +7,7 @@
 #include "map.h"
 #include "math.h"
 
+/// @private  
 int hash_log2(int num_to_log)
 {
     int t = 1;
@@ -20,6 +21,7 @@ int hash_log2(int num_to_log)
     return i;
 }
 
+/// @private  
 int hash_upperLimit(int bitsize)
 {
     return 1 << bitsize;
@@ -28,7 +30,7 @@ int hash_upperLimit(int bitsize)
 /// @private
 int char_ratio = (int)(sizeof(int) / sizeof(char));
 
-// Modified some stuff from : http://isthe.com/chongo/tech/comp/fnv/
+/// Modified some stuff from : http://isthe.com/chongo/tech/comp/fnv/ @private
 int hash_string(int hash_table_size, char *string, int strlen)
 {
     int i, hash = 2166136261;
@@ -62,6 +64,7 @@ map *NewMap(int capacity)
     return map_p;
 }
 
+/// @private  
 void _bucket_insert(struct _map_bucket *bucket, char *key, void *value)
 {
     struct _map_bucket *check = bucket;
@@ -89,7 +92,7 @@ void Map_Set(map *a_map, char *key, void *value)
     int hash = hash_string(a_map->size, key, keyl);
     _bucket_insert(&(a_map->buckets[hash]), key, value);
 }
-
+/// @private  
 void _bucket_get(struct _map_bucket *bucket, char *key, map_result *result)
 {
     struct _map_bucket *check = bucket;
